@@ -1,7 +1,0 @@
-this is just a test
-
-commit from CLI-git worked
-
-now trying from within PyCharm
-
-and again...
