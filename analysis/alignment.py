@@ -13,7 +13,7 @@ def align_clustal(file_name):
 
 def parse_clustal_idstars(file_name):
     """Parse ClustalW output file to measure identity percentage."""
-    from shared.text_manipulation import td_txt_file_load
+    from analysis.text_manipulation import td_txt_file_load
     import re
     raw_lines = td_txt_file_load(file_name,3)
     single_line = ''.join(raw_lines)

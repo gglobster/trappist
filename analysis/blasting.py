@@ -1,10 +1,10 @@
 __author__ = 'GG'
 
-def make_blastDB(genome_name, seq_file, db_type):
+def make_blastDB(db_path, genome_name, seq_file, db_type):
     """Create a BLASTable database if it doesn't already exist."""
     import sys, subprocess
     from other import ensure_dir
-    dir_report = ensure_dir('blast')
+    dir_report = ensure_dir(db_path)
     if dir_report['status'] is 1:
         print dir_report['message']
         sys.exit()
@@ -22,7 +22,8 @@ def make_blastDB(genome_name, seq_file, db_type):
                 attempts += 1
                 status = 1
                 cline = 'makeblastdb -in '+seq_file+' -dbtype '+db_type+' -title '\
-                        +seq_file+' -out blast/'+genome_name+' -parse_seqids'
+                        +seq_file+' -out '+db_path \
+                        +genome_name+' -parse_seqids'
                 child = subprocess.Popen(str(cline), stdout=subprocess.PIPE,
                                          shell=True)
                 output, error = child.communicate()
@@ -47,13 +48,14 @@ def local_blastn(query_file, out_file, database, prefs):
 
 def blast_record_set(db_name, fasta_records, blast_prefs):
     """Loop through fasta entries and blast against database."""
-    from shared.sequence_file_ops import write_fasta
-    from shared.blasting import local_blastn
-    from shared.text_manipulation import adaptive_list_load
+    from analysis.sequence_file_ops import write_fasta
+    from analysis.blasting import local_blastn
+    from analysis.text_manipulation import adaptive_list_load
+    db_path = blast_prefs['db_path']
     evalue_pref = blast_prefs['evalue']
     score_pref = blast_prefs['score']
     len_pref = blast_prefs['length']
-    matches = []
+    matches = {}
     for query_record in fasta_records:
         # Blast each record against the current database.
         query_file = 'temp.fas'
@@ -78,11 +80,14 @@ def blast_record_set(db_name, fasta_records, blast_prefs):
                 elif length < len_pref:
                     pass # this is bad too
                 else:
+                    # Add match to dictionary with query id as key
                     if m_start > m_end: m_orient = '-'
                     else: m_orient = '+'
-                    match = {'contig_id': contig_ID, 'match_p100': match_p100,
+                    match = {'contig_id': contig_ID,
+                              'match_p100': match_p100,
                              'length': length, 'm_orient': m_orient,
                              'evalue': evalue, 'bitscore': bitscore}
-                    matches.append(match)
+                    try: matches[query_record.id].append(match)
+                    except KeyError: matches[query_record.id] = [match]
     return matches
 

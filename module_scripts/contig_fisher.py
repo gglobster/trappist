@@ -5,7 +5,7 @@ __author__ = 'GG'
 # SETUP
 
 # Import methods
-from shared.dataset_manipulation import seq_subset_load, genome_set_load
+from analysis.dataset_manipulation import seq_subset_load, genome_set_load
 
 # Set up environment and config parameters
 ## create config objects

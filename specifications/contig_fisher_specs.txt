@@ -1,0 +1,92 @@
+CONTIG_FISHER
+
+This module makes it possible to extract contigs of interest from
+whole-genome sequence datasets based on similarity to a query, evaluated
+using BLAST. The default workflow calls for a single query but this can be
+adapted to run batch jobs for multiple queries or to switch between queries
+in interactive mode.
+
+When a new CONTIG_FISHER workbench is created, the following containers
+are initialized:
+
+>>> genome_sets = []
+>>> fisher_queries = []
+>>> blast_runs = []
+
+Next, the environment settings are initialized from defaults or user inputs
+where available. Major environment settings include working directory,
+data input mode and preferences, operational parameters and output
+requirements.
+
+The workbench state can be serialized (saved to a compressed file) for
+future use or reference.
+
+
+Adding genome datasets
+
+Each genome dataset is input using a function that takes a FASTA file with
+multiple records and a set of preferences and returns a GenomeSet object.
+
+>>> from trappist.analysis.dataset_manipulation import genome_sets_load
+>>> new_genome_sets = genome_sets_load(input_file, input_prefs, db_path)
+>>> for genome in new_genome_sets:
+...     genome_sets.append(genome)
+
+
+Adding a query
+
+The query is built from sequence objects that can be provided from a variety
+of sources. Once loaded, all query information is bundled into a FisherQuery
+object.
+
+>>> from trappist.analysis.dataset_manipulation import seq_subset_load
+>>> query_segs, query_file = seq_subset_load(infile, subset_mode, subset_args)
+>>> new_query = FisherQuery(query_id, query_segs, query_file)
+>>> fisher_queries.append(new_query)
+
+The type of source needs to be specified to the loader function
+with appropriate arguments.
+
+Case 1: Direct loading from a multiple FASTA sequence file
+
+This case allows the use of query segments collected from different genomes.
+>>> subset_mode = 'flatfile'
+>>> subset_args = {}
+
+Case 2: Extracting a subset of segments from a single FASTA sequence file
+
+A. Based on a list of coordinates
+>>> subset_mode = 'coordinates'
+>>> subset_args = coords_file, header, columns
+
+B. Based on GenBank annotation features (sequence file MUST be GenBank)
+>>> subset_mode = 'features'
+>>> subset_args = {'types': annot_types, 'tags': key_and_values_dict}
+
+C. Based on segment size limitation (default)
+>>> subset_mode = 'size'
+>>> subset_args = chop_size
+
+
+Blast runs
+
+The query and blast parameters are used to create a BlastRun object to which
+a unique identifier is assigned.
+
+>>> my_run = BlastRun(run_id, query, parameters)
+
+The comparison of the query to a genome is done by passing the BlastRun
+object to a GenomeSet method that performs the blast operation and records
+matches that satisfy similarity requirements specified in the parameters.
+
+>>> genome.run_blast(my_run)
+
+The matches for a given run are stored in dictionary form as lists indexed
+by query identifier. Complete match sets are paired with a reference to the
+run identifier and are stored in the GenomeSet.
+
+
+Match sorting
+
+
+

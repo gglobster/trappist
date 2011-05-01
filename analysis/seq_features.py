@@ -2,7 +2,7 @@ __author__ = 'GG'
 
 def feat_collect(infile, feat_mode):
     """Collect a subset of features from a genbank file."""
-    from shared.sequence_file_ops import load_genbank
+    from analysis.sequence_file_ops import load_genbank
     gb_record = load_genbank(infile)
     feat_list = gb_record.features
     collected = []
