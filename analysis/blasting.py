@@ -8,16 +8,14 @@ def make_blastDB(db_path, genome_name, seq_file, db_type):
     if dir_report['status'] is 1:
         print dir_report['message']
         sys.exit()
-    elif dir_report['status'] is 0: ### could use the absolute path! also, take out the hard-coding! 
+    elif dir_report['status'] is 0: ### use the absolute path! also, take out the hard-coding!
         attempts = 0
         while attempts < 2:
-            try: # check that the blast database files are all present        
-                open('blast/'+genome_name+'.nhr')
-                open('blast/'+genome_name+'.nin')
-                open('blast/'+genome_name+'.nog')
-                open('blast/'+genome_name+'.nsd')
-                open('blast/'+genome_name+'.nsi')
-                open('blast/'+genome_name+'.nsq')
+            try: # check that the blast database files are all present
+                blast_db_ext_set = ['.nin', '.nog', '.nsd', '.nsi', '.nsq',
+                                    '.nhr']
+                for blast_db_ext in blast_db_ext_set:
+                    open(db_path+genome_name+blast_db_ext)
             except IOError:
                 attempts += 1
                 status = 1
@@ -41,8 +39,10 @@ def local_blastn(query_file, out_file, database, prefs):
     cline = NcbiblastnCommandline(query=query_file, db=database,
                                   evalue=prefs['evalue'], out=out_file,
                                   outfmt=prefs['outfmt_pref'])
+    print cline
     child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
     output, error = child.communicate()
+    print output, error
     status = {'output': output, 'error': error}
     return status
 
