@@ -57,6 +57,7 @@ Case 2: Extracting a subset of segments from a single FASTA sequence file
 
 A. Based on a list of coordinates
 >>> subset_mode = 'coordinates'
+
 >>> subset_args = coords_file, header, columns
 
 B. Based on GenBank annotation features (sequence file MUST be GenBank)

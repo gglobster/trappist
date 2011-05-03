@@ -1,4 +1,0 @@
-# Creating a module fixture -- exercise from Python Testing book p. 113
-
-from unittest import TestCase
-from mocker import Mocker
