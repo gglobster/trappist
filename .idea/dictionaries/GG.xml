@@ -2,16 +2,19 @@
   <dictionary name="GG">
     <words>
       <w>annot</w>
+      <w>codespace</w>
       <w>dataset</w>
       <w>datasets</w>
       <w>dbfile</w>
       <w>dirhandle</w>
+      <w>exactsize</w>
       <w>flatfile</w>
       <w>multi</w>
       <w>nucl</w>
       <w>segs</w>
       <w>seqrecord</w>
       <w>teardown</w>
+      <w>tosize</w>
     </words>
   </dictionary>
 </component>

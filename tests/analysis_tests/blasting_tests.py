@@ -52,7 +52,9 @@ class test_blast_calls(TestCase):
             try:
                 os.remove(self.temp_dir+self.db_name+blast_db_ext)
             except Exception as message: print message
-        os.rmdir(self.temp_dir)
+        try:
+            os.rmdir(self.temp_dir)
+        except Exception as message: print message
 
     def test_local_blastn(self):
         # prepare query
