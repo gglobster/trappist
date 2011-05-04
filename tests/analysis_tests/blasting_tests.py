@@ -8,47 +8,117 @@ from unittest import TestCase
 from Bio.Seq import Seq, SeqRecord
 from analysis import sequence_file_ops, blasting
 
-class test_blasting(TestCase):
+class test_blast_calls(TestCase):
 
-    def setUp(self): # move part of this to a fixtures file
+    def setUp(self): # could move part of this to a fixtures file for reuse
+        # create temp directory
         self.temp_dir = 'tests/temp_data/'
         os.mkdir(self.temp_dir)
-        seq_1 = Seq('AATTTAATGGCGCAGGCTAGGAGAGAGATTTTTGGCGCTCGCGGCGGGCGCGGCG')
-        seq_2 = Seq('GGATTATACCAAAGGCTTAAACTATAGGCTAGGAGAGATAGACG')
-        seq_3 = Seq('GGAATATACCTTAGGCTTAAACTATAGGCTAGGAGAGGCTCG')
-        record_1 = SeqRecord(seq_1, id='temp_1')
-        record_2 = SeqRecord(seq_2, id='temp_2')
-        record_3 = SeqRecord(seq_3, id='temp_3')
-        seq_records_query = [record_1]
-        seq_records_db = [record_1, record_2, record_3]
-        self.query_file = self.temp_dir+'temp_in.fas'
-        sequence_file_ops.write_fasta(self.query_file, seq_records_query)
+        # create some sequence records
+        self.seq_1 = Seq('AATTTAATGGCGCAGGCTAGGAGAGAGATTTTTGGCGCTCGCGGCGGGG')
+        self.seq_2 = Seq('GGATTATACCAAAGGCTTAAACTATAGGCTAGGAGAGATAGACG')
+        self.seq_3 = Seq('GGAATATACCTTAGGCTTAAACTATAGGCTAGGAGAGGCTCG')
+        self.seq_4 = Seq('GGGGATTACAGCCATAGTAACCAGATATTAaGACG')
+        self.seq_5 = Seq('GGAACCGCTGATACATGATTATAGATCTATAGGGTCTAAAACATCG')
+        self.record_1 = SeqRecord(self.seq_1, id='temp_1')
+        self.record_2 = SeqRecord(self.seq_2, id='temp_2')
+        self.record_3 = SeqRecord(self.seq_3, id='temp_3')
+        self.record_4 = SeqRecord(self.seq_4, id='temp_4')
+        self.record_5 = SeqRecord(self.seq_5, id='temp_5')
+        # create record sets
+        self.single_record = self.record_1
+        self.multi_records = [self.record_2, self.record_3, self.record_4]
+        self.db_records = [self.record_1, self.record_2, self.record_3,
+                           self.record_4, self.record_5]
+        # define file names
+        self.single_q_file = self.temp_dir+'temp_single_in.fas'
+        self.multi_q_file = self.temp_dir+'temp_multi_in.fas'
         self.db_file = self.temp_dir+'temp_db.fas'
-        sequence_file_ops.write_fasta(self.db_file, seq_records_db)
-        self.db_name = 'genome'
-        self.database = blasting.make_blastDB(self.temp_dir, self.db_name,
-                                              self.db_file, 'nucl')
-        self.out_file = self.temp_dir+'temp_out.blast'
+        self.db_name = 'temp_database'
+        self.single_out_file = self.temp_dir+'temp_single_out.blast'
+        self.multi_out_file = self.temp_dir+'temp_multi_out.blast'
+        # define blast parameters
         self.prefs = {'evalue': 0.1, 'outfmt_pref': 6, 'score': 10,
                       'length': 10}
 
     def tearDown(self):
-        temp_files = [self.query_file, self.db_file, self.out_file]
+        temp_files = [self.single_q_file, self.multi_q_file, self.db_file,
+                      self.single_out_file, self.multi_out_file]
         for file in temp_files:
-            os.remove(file)
+            try: os.remove(file)
+            except Exception as message: print message
         blast_db_ext_set = ['.nin', '.nog', '.nsd', '.nsi', '.nsq', '.nhr']
         for blast_db_ext in blast_db_ext_set:
-            os.remove(self.temp_dir+self.db_name+blast_db_ext)
+            try:
+                os.remove(self.temp_dir+self.db_name+blast_db_ext)
+            except Exception as message: print message
         os.rmdir(self.temp_dir)
 
     def test_local_blastn(self):
-        self.status = blasting.local_blastn(self.query_file, self.out_file,
-                                            self.temp_dir+self.db_name,
+        # prepare query
+        sequence_file_ops.write_fasta(self.single_q_file, self.single_record)
+        query_record = sequence_file_ops.load_fasta(self.single_q_file)
+        self.assertEqual(query_record.id,self.record_1.id)
+        self.assertEqual(str(query_record.seq),str(self.record_1.seq))
+        # prepare database
+        sequence_file_ops.write_fasta(self.db_file, self.db_records)
+        records_list = sequence_file_ops.load_multifasta(self.db_file)
+        index = 0
+        for record in records_list:
+            self.assertEqual(record.id,self.db_records[index].id)
+            self.assertEqual(str(record.seq),str(self.db_records[index].seq))
+            index +=1
+        # make database
+        self.dbfile_path, db_report = blasting.make_blastDB(self.temp_dir,
+                                                            self.db_name,
+                                                            self.db_file,
+                                                            'nucl')
+        self.assertIs(db_report['status'], 0)
+        self.assertEquals(db_report['message'], 'database exists')
+        # run local blast with single query
+        self.status = blasting.local_blastn(self.single_q_file,
+                                            self.single_out_file,
+                                            self.dbfile_path,
                                             self.prefs)
         self.assertEquals(self.status['output'], '')
         self.assertIsNone(self.status['error'])
-        self.matches = blasting.parse_blast_out6(self.out_file, self.prefs)
-        self.assertEquals(len(self.matches), 1)
+        # parse blast output
+        matches_single = blasting.parse_blast_out6(self.single_out_file,
+                                                   self.prefs)
+        self.assertIs(len(matches_single), 1)
+        self.assertEqual(matches_single[0]['contig_id'],
+                         self.single_record.id)
+        self.assertEqual(matches_single[0]['match_p100'], 100)
         
+    def test_blast_record_set(self):
+        # prepare database
+        sequence_file_ops.write_fasta(self.db_file, self.db_records)
+        db_records_list = sequence_file_ops.load_multifasta(self.db_file)
+        index = 0
+        for record in db_records_list:
+            self.assertEqual(record.id,self.db_records[index].id)
+            self.assertEqual(str(record.seq),str(self.db_records[index].seq))
+            index +=1
+        # make database
+        self.dbfile_path, db_report = blasting.make_blastDB(self.temp_dir,
+                                                            self.db_name,
+                                                            self.db_file,
+                                                            'nucl')
+        self.assertIs(db_report['status'], 0)
+        self.assertEquals(db_report['message'], 'database exists')
+        # run local blast batch (with multiple queries)
+        matches_multi = blasting.blast_record_set(self.dbfile_path,
+                                                  self.multi_records,
+                                                  self.prefs)
+        self.assertIs(len(matches_multi), 3)
+        index = 0
+        for record in self.multi_records:
+            self.assertEqual(matches_multi[record.id][0]['contig_id'],
+                             self.multi_records[index].id)
+            self.assertEqual(matches_multi[record.id][0]['match_p100'], 100)
+            index +=1
+
+
+
         
         

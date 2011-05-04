@@ -14,21 +14,23 @@ def uniqify(seq,idfun=None):
         result.append(item)
     return result
 
-def ensure_dir(dir_name):
+def ensure_dir(dir_path):
     """Check that the directory exists; if not, create it."""
     from os import path, makedirs
-    abs_dir = path.abspath(dir_name)
-    if not path.exists(abs_dir):
-        try: makedirs(abs_dir)
+    abs_path = path.abspath(dir_path)
+    if not path.exists(abs_path):
+        try: makedirs(abs_path)
         except Exception as message: 
             status = 1
+            # TODO: make graceful fail or request input if interactive mode
         else: 
-            message = 'created directory'
+            message = 'created path'
             status = 0
     else: 
-        message = 'directory exists'
+        message = 'path exists'
         status = 0
-    return {'message': message, 'status': status, 'path': abs_dir} 
+    report = {'message': message, 'status': status}
+    return abs_path, report
 
 def coord_chop(length, size, mode):
     """Chop a given length into segments and return coordinate pairs."""

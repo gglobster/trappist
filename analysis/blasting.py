@@ -2,66 +2,67 @@ __author__ = 'GG'
 
 def make_blastDB(db_path, genome_name, seq_file, db_type):
     """Create a BLASTable database if it doesn't already exist."""
-    import sys, subprocess
+    import os, subprocess
     from other import ensure_dir
-    dir_report = ensure_dir(db_path)
-    if dir_report['status'] is 1:
-        print dir_report['message']
-        sys.exit()
-    elif dir_report['status'] is 0: ### use the absolute path! also, take out the hard-coding!
-        attempts = 0
-        while attempts < 2:
-            try: # check that the blast database files are all present
-                blast_db_ext_set = ['.nin', '.nog', '.nsd', '.nsi', '.nsq',
-                                    '.nhr']
-                for blast_db_ext in blast_db_ext_set:
-                    open(db_path+genome_name+blast_db_ext)
-            except IOError:
-                attempts += 1
-                status = 1
-                cline = 'makeblastdb -in '+seq_file+' -dbtype '+db_type \
-                        +' -title '+seq_file+' -out '+db_path \
-                        +genome_name+' -parse_seqids'
-                child = subprocess.Popen(str(cline), stdout=subprocess.PIPE,
-                                         shell=True)
-                output, error = child.communicate()
-                message = {'output': output, 'error': error}
-            else: 
-                attempts += 2
-                status = 0
-                message = 'database exists'
-    return {'message': message, 'status': status} 
+    abs_path, dir_report = ensure_dir(db_path)
+    dbfile_path = os.path.join(abs_path, genome_name)
+    attempts = 0
+    message, status = None, None
+    while attempts < 2:
+        try: # check that the blast database files are all present
+            blast_db_ext_set = ['.nin', '.nog', '.nsd', '.nsi', '.nsq',
+                                '.nhr']
+            for blast_db_ext in blast_db_ext_set:
+                open(dbfile_path+blast_db_ext)
+        except IOError:
+            attempts += 1
+            status = 1
+            cline = 'makeblastdb -in '+seq_file+' -dbtype '+db_type \
+                    +' -title '+seq_file+' -out '+db_path \
+                    +genome_name+' -parse_seqids'
+            child = subprocess.Popen(str(cline), stdout=subprocess.PIPE,
+                                     shell=True)
+            output, error = child.communicate()
+            message = {'output': output, 'error': error}
+        else:
+            attempts += 2
+            status = 0
+            message = 'database exists'
+    report = {'message': message, 'status': status}
+    return dbfile_path, report
 
-def local_blastn(query_file, out_file, database, prefs):
+def local_blastn(query_file, out_file, dbfile_path, prefs):
     """Perform blastn on local database."""
     import subprocess
     from Bio.Blast.Applications import NcbiblastnCommandline
-    cline = NcbiblastnCommandline(query=query_file, db=database,
+    cline = NcbiblastnCommandline(query=query_file, db=dbfile_path,
                                   evalue=prefs['evalue'], out=out_file,
                                   outfmt=prefs['outfmt_pref'])
-    print cline
     child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
     output, error = child.communicate()
-    print output, error
     status = {'output': output, 'error': error}
     return status
 
-def blast_record_set(db_name, fasta_records, blast_prefs):
+def blast_record_set(dbfile_path, fasta_records, blast_prefs):
     """Loop through fasta entries and blast against database."""
+    import os
     from analysis.sequence_file_ops import write_fasta
     from analysis.blasting import local_blastn
-    db_path = blast_prefs['db_path']
     matches = {}
     for query_record in fasta_records:
         query_file = 'temp.fas'
         out_file = 'temp.blast'
         write_fasta(query_file,query_record)
         try:
-            status = local_blastn(query_file, out_file, db_name, blast_prefs)
+            status = local_blastn(query_file, out_file, dbfile_path,
+                                  blast_prefs) 
         except: raise
         else:
             query_matches = parse_blast_out6(out_file,blast_prefs)
             matches[query_record.id] = query_matches
+        finally:
+            os.remove(query_file)
+            os.remove(out_file)
     return matches
 
 def parse_blast_out6(out_file, blast_prefs):

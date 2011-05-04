@@ -4,7 +4,10 @@
       <w>annot</w>
       <w>dataset</w>
       <w>datasets</w>
+      <w>dbfile</w>
+      <w>dirhandle</w>
       <w>flatfile</w>
+      <w>multi</w>
       <w>nucl</w>
       <w>segs</w>
       <w>seqrecord</w>

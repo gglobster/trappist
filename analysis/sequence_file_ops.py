@@ -141,13 +141,6 @@ def seq_length_from_file(filename):
     input_handle.close()
     return seq_length
 
-def ensure_dir(dir_name):
-    """Check that the directory exists; if not, create it."""
-    from os import path,makedirs
-    dirhandle = path.dirname(dir_name)
-    if not path.exists(dirhandle):
-        makedirs(dirhandle)
-
 def compile_multifasta_from_folders(base_names_list,data_dir,folder_ext,
                                     file_ext,number_base):
     """Compile fasta records from folders into single multifasta files."""
