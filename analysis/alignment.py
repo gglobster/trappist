@@ -2,14 +2,14 @@ __author__ = 'GG'
 
 def align_clustal(file_name):
     """Make external call to ClustalW aligner and output a text file."""
-    import sys,subprocess
+    import subprocess
     from Bio.Align.Applications import ClustalwCommandline
     cline = ClustalwCommandline("clustalw", infile=file_name)
-    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE,
-                             shell=(sys.platform!="win32"))
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
     output, error = child.communicate()
-    # should do something to parse ClustalW errors
-    return output
+    report = {'output': output, 'error': error}
+    # TODO: should set up something to parse ClustalW errors
+    return report
 
 def parse_clustal_idstars(file_name):
     """Parse ClustalW output file to measure identity percentage."""
@@ -22,25 +22,23 @@ def parse_clustal_idstars(file_name):
     idntot = len(idnalls)
     return idntot # total number of identical nucleotide positions
 
-def align_muscle(infile_name,outfile_name):
+def align_muscle(infile_name, outfile_name, log_file):
     """Make external call to Muscle aligner."""
-    import sys,subprocess
+    import subprocess
     from Bio.Align.Applications import MuscleCommandline
-    cline = MuscleCommandline(input=infile_name, out=outfile_name,
-                              clw=True, loga='muscle_log.txt',
-                              verbose='yes') #, quiet='no'
-                              # enable quiet/verbose switch at config time
-    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE,
-                             shell=(sys.platform!="win32"))
+    cline = MuscleCommandline(input=infile_name, out=outfile_name,clw=True,
+                              loga=log_file, quiet='y') 
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
     output, error = child.communicate()
-    # should do something to parse MUSCLE errors
-    return output
+    report = {'output': output, 'error': error}
+    # TODO: should set up something to parse MUSCLE errors
+    return report
 
 def align_mauve(cline):
     """Make external call to Mauve aligner."""
-    import sys,subprocess
-    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE,
-                             shell=(sys.platform!="win32"))
+    import subprocess
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
     output, error = child.communicate()
-    # should do something to parse Mauve errors
-    return output
+    report = {'output': output, 'error': error}
+    # TODO: should set up something to parse Mauve errors
+    return report

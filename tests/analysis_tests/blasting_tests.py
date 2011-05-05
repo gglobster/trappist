@@ -49,11 +49,9 @@ class test_blast_calls(TestCase):
             except Exception as message: print message
         blast_db_ext_set = ['.nin', '.nog', '.nsd', '.nsi', '.nsq', '.nhr']
         for blast_db_ext in blast_db_ext_set:
-            try:
-                os.remove(self.temp_dir+self.db_name+blast_db_ext)
+            try: os.remove(self.temp_dir+self.db_name+blast_db_ext)
             except Exception as message: print message
-        try:
-            os.rmdir(self.temp_dir)
+        try: os.rmdir(self.temp_dir)
         except Exception as message: print message
 
     def test_local_blastn(self):

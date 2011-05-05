@@ -1,7 +1,12 @@
 <component name="ProjectDictionaryState">
   <dictionary name="GG">
     <words>
+      <w>aatttaatggcgcaggctaggagagagatttttggcgctcgcggggcgggg</w>
       <w>annot</w>
+      <w>bbcol</w>
+      <w>bbcols</w>
+      <w>clustal</w>
+      <w>clustalw</w>
       <w>codespace</w>
       <w>dataset</w>
       <w>datasets</w>
@@ -9,10 +14,16 @@
       <w>dirhandle</w>
       <w>exactsize</w>
       <w>flatfile</w>
+      <w>idnalls</w>
+      <w>idnstar</w>
+      <w>idntot</w>
+      <w>idstars</w>
+      <w>locustag</w>
       <w>multi</w>
       <w>nucl</w>
       <w>segs</w>
       <w>seqrecord</w>
+      <w>sslist</w>
       <w>teardown</w>
       <w>tosize</w>
     </words>

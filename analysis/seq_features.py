@@ -18,7 +18,7 @@ def feat_collect(infile, feat_mode):
                 for tag_key in tags_dict.keys():
                     if tag_key in feature.qualifiers:
                         feat_value = feature.qualifiers.get(tag_key)
-                        if feat_value in tags_dict[tag_key]:
+                        if feat_value[0] in tags_dict[tag_key]:
                             collected.append(feature)
                         else: pass
                     else: pass
