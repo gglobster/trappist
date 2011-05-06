@@ -13,7 +13,7 @@ class test_alignments(TestCase):
 
     def setUp(self):
         # create temp directory
-        self.temp_dir = 'tests/temp_data/'
+        self.temp_dir = "tests/temp_data/"
         os.mkdir(self.temp_dir)
         # create some sequence records
         self.seq_1 = Seq('AATTTAATGCATATCTAGGAGAGAGATTTTTGGCGCTAACGGGG')
@@ -26,22 +26,22 @@ class test_alignments(TestCase):
         self.two_records = [self.record_1, self.record_2]
         self.three_records = [self.record_1, self.record_2, self.record_3]
         # define file names
-        self.seq_file_2 = self.temp_dir+'temp_2_in.fas'
-        self.seq_file_3 = self.temp_dir+'temp_3_in.fas'
-        self.aln_file_2 = self.temp_dir+'temp_2_in.aln'
-        self.aln_file_3 = self.temp_dir+'temp_3_in.aln'
-        self.dnd_file_2 = self.temp_dir+'temp_2_in.dnd'
-        self.dnd_file_3 = self.temp_dir+'temp_3_in.dnd'
-        self.muscle_log = self.temp_dir+'temp_log.txt'
-        self.seq_file_m1 = self.temp_dir+'temp_m1_in.fas'
-        self.seq_file_m2 = self.temp_dir+'temp_m2_in.fas'
-        self.seq_file_m3 = self.temp_dir+'temp_m3_in.fas'
-        self.mauve_out = self.temp_dir+'temp_out.mauve'
-        self.mauve_out_bb = self.mauve_out+'.backbone'
-        self.mauve_out_bbcols = self.mauve_out+'.bbcols'
-        self.mauve_sslist_1 = self.seq_file_m1+'.sslist'
-        self.mauve_sslist_2 = self.seq_file_m2+'.sslist'
-        self.mauve_sslist_3 = self.seq_file_m3+'.sslist'
+        self.seq_file_2 = self.temp_dir+"temp_2_in.fas"
+        self.seq_file_3 = self.temp_dir+"temp_3_in.fas"
+        self.aln_file_2 = self.temp_dir+"temp_2_in.aln"
+        self.aln_file_3 = self.temp_dir+"temp_3_in.aln"
+        self.dnd_file_2 = self.temp_dir+"temp_2_in.dnd"
+        self.dnd_file_3 = self.temp_dir+"temp_3_in.dnd"
+        self.muscle_log = self.temp_dir+"temp_log.txt"
+        self.seq_file_m1 = self.temp_dir+"temp_m1_in.fas"
+        self.seq_file_m2 = self.temp_dir+"temp_m2_in.fas"
+        self.seq_file_m3 = self.temp_dir+"temp_m3_in.fas"
+        self.mauve_out = self.temp_dir+"temp_out.mauve"
+        self.mauve_out_bb = self.mauve_out+".backbone"
+        self.mauve_out_bbcols = self.mauve_out+".bbcols"
+        self.mauve_sslist_1 = self.seq_file_m1+".sslist"
+        self.mauve_sslist_2 = self.seq_file_m2+".sslist"
+        self.mauve_sslist_3 = self.seq_file_m3+".sslist"
         # create temp files
         sequence_file_ops.write_fasta(self.seq_file_2, self.two_records)
         sequence_file_ops.write_fasta(self.seq_file_3, self.three_records)

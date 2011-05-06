@@ -104,7 +104,7 @@ class test_list_logic(TestCase):
 class test_os_logic(TestCase):
 
     def setUp(self):
-        self.temp_path = 'tests/temp_dir/'
+        self.temp_path = "tests/temp_dir/"
 
     def tearDown(self):
         try: os.rmdir(self.temp_path)

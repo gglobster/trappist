@@ -71,7 +71,7 @@ def parse_blast_out6(out_file, blast_prefs):
     score_pref = blast_prefs['score']
     len_pref = blast_prefs['length']
     query_matches = []
-    results = adaptive_list_load(out_file, 0, (2, 3, 4, 9, 10, 11, 12))
+    results = adaptive_list_load(out_file, 0, (1, 2, 3, 8, 9, 10, 11))
     for line in results:
         contig_ID = line[0]
         match_p100 = float(line[1])

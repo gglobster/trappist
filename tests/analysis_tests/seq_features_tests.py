@@ -15,7 +15,7 @@ class test_seq_features(TestCase):
 
     def setUp(self):
         # create temp directory
-        self.temp_dir = 'tests/temp_data/'
+        self.temp_dir = "tests/temp_data/"
         os.mkdir(self.temp_dir)
         # create a sequence record with genbank features
         self.seq = Seq('AATTTAATGGCGCAGGCTAGGAGAGAGATTTTTGGCGCTCGCGGGGCGGGG',
@@ -45,7 +45,7 @@ class test_seq_features(TestCase):
         self.record = SeqRecord(self.seq, id='temp', name='temp_name',
                                 description='temporary genbank record',
                                 features=self.features)
-        self.filename = self.temp_dir+'temp_in.gbk'
+        self.filename = self.temp_dir+"temp_in.gbk"
         self.count = sequence_file_ops.write_genbank(self.filename,
                                                     self.record)
 

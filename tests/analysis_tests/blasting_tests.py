@@ -12,7 +12,7 @@ class test_blast_calls(TestCase):
 
     def setUp(self): # could move part of this to a fixtures file for reuse
         # create temp directory
-        self.temp_dir = 'tests/temp_data/'
+        self.temp_dir = "tests/temp_data/"
         os.mkdir(self.temp_dir)
         # create some sequence records
         self.seq_1 = Seq('AATTTAATGGCGCAGGCTAGGAGAGAGATTTTTGGCGCTCGCGGCGGGG')
@@ -31,12 +31,12 @@ class test_blast_calls(TestCase):
         self.db_records = [self.record_1, self.record_2, self.record_3,
                            self.record_4, self.record_5]
         # define file names
-        self.single_q_file = self.temp_dir+'temp_single_in.fas'
-        self.multi_q_file = self.temp_dir+'temp_multi_in.fas'
-        self.db_file = self.temp_dir+'temp_db.fas'
+        self.single_q_file = self.temp_dir+"temp_single_in.fas"
+        self.multi_q_file = self.temp_dir+"temp_multi_in.fas"
+        self.db_file = self.temp_dir+"temp_db.fas"
         self.db_name = 'temp_database'
-        self.single_out_file = self.temp_dir+'temp_single_out.blast'
-        self.multi_out_file = self.temp_dir+'temp_multi_out.blast'
+        self.single_out_file = self.temp_dir+"temp_single_out.blast"
+        self.multi_out_file = self.temp_dir+"temp_multi_out.blast"
         # define blast parameters
         self.prefs = {'evalue': 0.1, 'outfmt_pref': 6, 'score': 10,
                       'length': 10}
@@ -47,7 +47,7 @@ class test_blast_calls(TestCase):
         for file in temp_files:
             try: os.remove(file)
             except Exception as message: print message
-        blast_db_ext_set = ['.nin', '.nog', '.nsd', '.nsi', '.nsq', '.nhr']
+        blast_db_ext_set = [".nin", ".nog", ".nsd", ".nsi", ".nsq", ".nhr"]
         for blast_db_ext in blast_db_ext_set:
             try: os.remove(self.temp_dir+self.db_name+blast_db_ext)
             except Exception as message: print message
