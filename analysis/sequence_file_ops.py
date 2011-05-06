@@ -1,5 +1,9 @@
 __author__ = 'GG'
 
+# to switch between gbk and fasta, use
+# count = SeqIO.convert(infile, "genbank", outfile, "fasta")
+# and vice-versa
+
 # should add a function to manage directory handling
 
 def seqfile_format(filename):
@@ -27,21 +31,16 @@ def seqfile_format(filename):
     else :
         format = 'unidentified'
         name = filename
-    return format,name
-
-def convert_g2f(seqfile, outfile):
-    """Convert GenBank file to Fasta."""
-    from Bio import SeqIO
-    count = SeqIO.convert(seqfile, "genbank", outfile, "fasta")
-    return count
+    return format, name
 
 def ensure_fasta(filename):
     """Check file format; if it's GenBank, convert to Fasta."""
-    # should include handling other formats
-    format,name  = seqfile_format(filename)
+    # deprecate in favor of surefmt_load
+    from Bio import SeqIO
+    format, name = seqfile_format(filename)
     if format == 'genbank':
-        outfile = name + '.fas'
-        convert_g2f(filename,outfile)
+        outfile = name+".fas"
+        SeqIO.convert(filename, 'genbank', outfile, 'fasta')
     else:
         outfile = filename
     return outfile
@@ -51,9 +50,9 @@ def surefmt_load(filename, need_format, alphabet):
     from Bio import SeqIO
     seq_record, rec_type = load_agnostic(filename)
     if rec_type is not need_format:
-        if need_format is 'genbank': ext = '.gbk'
-        elif need_format is 'fasta': ext = '.fas'
-        else: ext = '.txt'
+        if need_format is 'genbank': ext = ".gbk"
+        elif need_format is 'fasta': ext = ".fas"
+        else: ext = ".txt"
         outfile = seq_record.id+ext
         try: SeqIO.convert(filename, rec_type, outfile, need_format, alphabet)
         except: raise
@@ -65,43 +64,45 @@ def surefmt_load(filename, need_format, alphabet):
 def write_fasta(filename, seqrecords):
     """Write Fasta file."""
     from Bio import SeqIO
-    output_handle = open(filename, "w")
-    count = SeqIO.write(seqrecords, output_handle, "fasta")
+    output_handle = open(filename, 'w')
+    count = SeqIO.write(seqrecords, output_handle, 'fasta')
     output_handle.close()
     return count
 
 def write_genbank(filename, seqrecords):
     """Write GenBank file."""
     from Bio import SeqIO
-    output_handle = open(filename, "w")
-    counter = SeqIO.write(seqrecords, output_handle, "genbank")
+    output_handle = open(filename, 'w')
+    counter = SeqIO.write(seqrecords, output_handle, 'genbank')
     output_handle.close()
     return counter
 
 def load_agnostic(seqfile):
     """Load single-record file of unspecified format."""
+    # present version is single-record fasta or genbank only
+    # TODO: expand options
     while True:
         try: seq_record = load_fasta(seqfile)
-        except: print 'not single-record fasta'
+        except: print "not single-record fasta"
         else: 
             rec_type = 'fasta'
-            print 'Found a fasta file'
+            print "found a fasta file"
             return seq_record, rec_type
             break
         try: seq_record = load_genbank(seqfile)
-        except: print 'not genbank'
+        except: print "not genbank"
         else: 
             rec_type = 'genbank'
-            print 'Found a genbank file'
+            print "found a genbank file"
             return seq_record, rec_type
             break
-        raise Exception('Cannot open query file!')
+        raise Exception("Cannot open query file!")
 
 def load_fasta(seqfile):
     """Load single-record Fasta file."""
     from Bio import SeqIO
-    input_handle = open(seqfile, "rU")
-    fasta_record = SeqIO.read(input_handle, "fasta")
+    input_handle = open(seqfile, 'rU')
+    fasta_record = SeqIO.read(input_handle, 'fasta')
     assert fasta_record.id 
     input_handle.close()
     return fasta_record
@@ -109,8 +110,8 @@ def load_fasta(seqfile):
 def load_multifasta(seqfile):
     """Load multiple records from Fasta file."""
     from Bio import SeqIO
-    input_handle = open(seqfile, "rU")
-    multifasta = SeqIO.parse(input_handle, "fasta")
+    input_handle = open(seqfile, 'rU')
+    multifasta = SeqIO.parse(input_handle, 'fasta')
     fasta_list = list(multifasta)
     for record in fasta_list:
         assert record.id
@@ -120,31 +121,16 @@ def load_genbank(seqfile):
     """Load single-record GenBank file."""
     from Bio import GenBank
     parser = GenBank.FeatureParser()
-    input_handle = open(seqfile, "rU")
+    input_handle = open(seqfile, 'rU')
     gb_record = parser.parse(input_handle)
     assert gb_record.id 
     input_handle.close()
     return gb_record
 
-def seq_length_from_file(filename):
-    """Get sequence length from the original file."""
-    format = seqfile_format(filename)
-    input_handle = open(filename, 'r')
-    if format == 'genbank' :
-        gb_record = load_genbank(input_handle)
-        seq_length = len(gb_record.seq)
-    elif format == 'fasta' or format == 'seq' :
-        fasta_record = load_fasta(input_handle)
-        seq_length = len(fasta_record[0].seq)
-    else :
-        seq_length = 0      # should throw an exception instead of this
-    input_handle.close()
-    return seq_length
-
 def compile_multifasta_from_folders(base_names_list,data_dir,folder_ext,
                                     file_ext,number_base):
     """Compile fasta records from folders into single multifasta files."""
-    # this needs to be reworked
+    # TODO: rework and make unit test
     from os import path
     glob_count  = 0
     for base_name in base_names_list:
