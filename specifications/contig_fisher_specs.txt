@@ -1,9 +1,10 @@
-CONTIG_FISHER
+### CONTIG_FISHER ###
 
-This module makes it possible to extract contigs of interest from
+This tool makes it possible to extract contigs of interest from
 whole-genome sequence datasets based on similarity to a query, evaluated
-using BLAST. The default workflow calls for a single query but this can be
-adapted to run batch jobs for multiple queries or to switch between queries
+using BLAST, and perform a mock assembly into a single linear construct for
+ease of analysis. The default workflow calls for a single query but this can
+be adapted to run batch jobs for multiple queries or to switch between queries
 in interactive mode.
 
 When a new CONTIG_FISHER workbench is created, the following containers
@@ -13,16 +14,8 @@ are initialized:
 >>> fisher_queries = []
 >>> blast_runs = []
 
-Next, the environment settings are initialized from defaults or user inputs
-where available. Major environment settings include working directory,
-data input mode and preferences, operational parameters and output
-requirements.
 
-The workbench state can be serialized (saved to a compressed file) for
-future use or reference.
-
-
-Adding genome datasets
+ACTION : Adding genome datasets
 
 Each genome dataset is input using a function that takes a FASTA file with
 multiple records and a set of preferences and returns a GenomeSet object.
@@ -33,7 +26,7 @@ multiple records and a set of preferences and returns a GenomeSet object.
 ...     genome_sets.append(genome)
 
 
-Adding a query
+ACTION : Adding a query set
 
 The query is built from sequence objects that can be provided from a variety
 of sources. Once loaded, all query information is bundled into a FisherQuery
@@ -69,7 +62,7 @@ C. Based on segment size limitation (default)
 >>> subset_args = chop_size
 
 
-Blast runs
+ACTION : Setting up BLAST runs
 
 The query and blast parameters are used to create a BlastRun object to which
 a unique identifier is assigned.
@@ -82,12 +75,20 @@ matches that satisfy similarity requirements specified in the parameters.
 
 >>> genome.run_blast(my_run)
 
+The run_blast() method calls blast_record_set() with the relevant GenomeSet
+and BlastRun attributes as arguments.
+
+>>> q_matches = blast_record_set(dbfile_path, fasta_records, blast_prefs)
+
 The matches for a given run are stored in dictionary form as lists indexed
 by query identifier. Complete match sets are paired with a reference to the
 run identifier and are stored in the GenomeSet.
 
 
-Match sorting
+ACTION : Sorting matches
 
+The data structure of match sets is generated on a per-query basis, but to do
+a mock assembly of the selected contigs into a linear construct, it needs to
+be transformed into a contig-centric form.
 
-
+>>> cc_matches = reorder_by_contig(q_matches)

@@ -6,7 +6,7 @@ sys.path.append("/Users/GG/codespace/trappist")
 import os
 from unittest import TestCase
 from Bio.Seq import Seq, SeqRecord
-from analysis import sequence_file_ops, blasting
+from analysis import seqfile_ops, blasting
 
 class test_blast_calls(TestCase):
 
@@ -56,13 +56,13 @@ class test_blast_calls(TestCase):
 
     def test_local_blastn(self):
         # prepare query
-        sequence_file_ops.write_fasta(self.single_q_file, self.single_record)
-        query_record = sequence_file_ops.load_fasta(self.single_q_file)
+        seqfile_ops.write_fasta(self.single_q_file, self.single_record)
+        query_record = seqfile_ops.load_fasta(self.single_q_file)
         self.assertEqual(query_record.id,self.record_1.id)
         self.assertEqual(str(query_record.seq),str(self.record_1.seq))
         # prepare database
-        sequence_file_ops.write_fasta(self.db_file, self.db_records)
-        records_list = sequence_file_ops.load_multifasta(self.db_file)
+        seqfile_ops.write_fasta(self.db_file, self.db_records)
+        records_list = seqfile_ops.load_multifasta(self.db_file)
         index = 0
         for record in records_list:
             self.assertEqual(record.id,self.db_records[index].id)
@@ -88,12 +88,12 @@ class test_blast_calls(TestCase):
         self.assertIs(len(matches_single), 1)
         self.assertEqual(matches_single[0]['contig_id'],
                          self.single_record.id)
-        self.assertEqual(matches_single[0]['match_p100'], 100)
+        self.assertEqual(matches_single[0]['details']['match_p100'], 100)
         
     def test_blast_record_set(self):
         # prepare database
-        sequence_file_ops.write_fasta(self.db_file, self.db_records)
-        db_records_list = sequence_file_ops.load_multifasta(self.db_file)
+        seqfile_ops.write_fasta(self.db_file, self.db_records)
+        db_records_list = seqfile_ops.load_multifasta(self.db_file)
         index = 0
         for record in db_records_list:
             self.assertEqual(record.id,self.db_records[index].id)
@@ -115,7 +115,8 @@ class test_blast_calls(TestCase):
         for record in self.multi_records:
             self.assertEqual(matches_multi[record.id][0]['contig_id'],
                              self.multi_records[index].id)
-            self.assertEqual(matches_multi[record.id][0]['match_p100'], 100)
+            self.assertEqual(matches_multi[record
+            .id][0]['details']['match_p100'], 100) 
             index +=1
 
 

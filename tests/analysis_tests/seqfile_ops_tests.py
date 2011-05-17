@@ -10,9 +10,9 @@ from unittest import TestCase
 from Bio.Seq import Seq, SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.Alphabet import generic_dna
-from analysis import sequence_file_ops
+from analysis import seqfile_ops
 
-class test_seq_features(TestCase):
+class test_seqfile_ops(TestCase):
 
     def setUp(self):
         # create temp directory
@@ -58,52 +58,52 @@ class test_seq_features(TestCase):
         except Exception as message: print message
 
     def test_seqfile_format_fas(self):
-        count = sequence_file_ops.write_fasta(self.fas_filename, self.record)
+        count = seqfile_ops.write_fasta(self.fas_filename, self.record)
         self.assertIs(count, 1)
-        format, name = sequence_file_ops.seqfile_format(self.fas_filename)
+        format, name = seqfile_ops.seqfile_format(self.fas_filename)
         self.assertEqual(format, 'fasta')
 
     def test_seqfile_format_gbk(self):
-        count = sequence_file_ops.write_genbank(self.gbk_filename,
+        count = seqfile_ops.write_genbank(self.gbk_filename,
                                                 self.record)
         self.assertIs(count, 1)
-        format, name = sequence_file_ops.seqfile_format(self.gbk_filename)
+        format, name = seqfile_ops.seqfile_format(self.gbk_filename)
         self.assertEqual(format, 'genbank')
 
     def test_seqfile_format_seq(self):
         seq_file = open(self.seq_filename, 'w')
         seq_file.write(str(self.seq))
         seq_file.close()
-        format, name = sequence_file_ops.seqfile_format(self.seq_filename)
+        format, name = seqfile_ops.seqfile_format(self.seq_filename)
         self.assertEqual(format, 'seq')
 
     def test_seqfile_format_other(self):
         seq_file = open(self.other_filename, 'w')
         seq_file.write(str(self.seq))
         seq_file.close()
-        format, name = sequence_file_ops.seqfile_format(self.other_filename)
+        format, name = seqfile_ops.seqfile_format(self.other_filename)
         self.assertEqual(format, 'unidentified')
 
     def test_surefmt_load_fas2fas(self):
-        count = sequence_file_ops.write_fasta(self.fas_filename, self.record)
+        count = seqfile_ops.write_fasta(self.fas_filename, self.record)
         self.assertIs(count, 1)
-        fas_record = sequence_file_ops.surefmt_load(self.fas_filename,
+        fas_record = seqfile_ops.surefmt_load(self.fas_filename,
                                                     'fasta', generic_dna)
         self.assertEqual(fas_record.id, self.record.id)
 
     def test_surefmt_load_gbk2fas(self):
-        count = sequence_file_ops.write_genbank(self.gbk_filename,
+        count = seqfile_ops.write_genbank(self.gbk_filename,
                                                 self.record)
         self.assertIs(count, 1)
-        fas_record = sequence_file_ops.surefmt_load(self.gbk_filename,
+        fas_record = seqfile_ops.surefmt_load(self.gbk_filename,
                                                     'fasta', generic_dna)
         self.assertEqual(fas_record.id, self.record.id)
 
     def test_surefmt_load_gbk2gbk(self):
-        count = sequence_file_ops.write_genbank(self.gbk_filename,
+        count = seqfile_ops.write_genbank(self.gbk_filename,
                                                 self.record)
         self.assertIs(count, 1)
-        gbk_record = sequence_file_ops.surefmt_load(self.gbk_filename,
+        gbk_record = seqfile_ops.surefmt_load(self.gbk_filename,
                                                     'genbank', generic_dna)
         self.assertEqual(gbk_record.id, self.record.id)
         # check features
@@ -112,32 +112,32 @@ class test_seq_features(TestCase):
                              self.record.features[index].type)
 
     def test_surefmt_load_fas2gbk(self):
-        count = sequence_file_ops.write_fasta(self.fas_filename, self.record)
+        count = seqfile_ops.write_fasta(self.fas_filename, self.record)
         self.assertIs(count, 1)
-        gbk_record = sequence_file_ops.surefmt_load(self.fas_filename,
+        gbk_record = seqfile_ops.surefmt_load(self.fas_filename,
                                                     'genbank', generic_dna)
         self.assertEqual(gbk_record.id, self.record.id)
 
     def test_write_and_load_single_fasta(self):
-        count = sequence_file_ops.write_fasta(self.fas_filename, self.record)
+        count = seqfile_ops.write_fasta(self.fas_filename, self.record)
         self.assertIs(count, 1)
-        fas_record = sequence_file_ops.load_fasta(self.fas_filename)
+        fas_record = seqfile_ops.load_fasta(self.fas_filename)
         self.assertEqual(fas_record.id, self.record.id)
 
     def test_write_and_load_multifasta(self):
-        count = sequence_file_ops.write_fasta(self.fas_filename,
+        count = seqfile_ops.write_fasta(self.fas_filename,
                                               self.three_records) 
         self.assertIs(count, 3)
-        fas_records = sequence_file_ops.load_multifasta(self.fas_filename)
+        fas_records = seqfile_ops.load_multifasta(self.fas_filename)
         for index in range (0,2):
             self.assertEqual(fas_records[index].id,
                              self.three_records[index].id)
 
     def test_write_and_load_single_genbank(self):
-        count = sequence_file_ops.write_genbank(self.gbk_filename,
+        count = seqfile_ops.write_genbank(self.gbk_filename,
                                                 self.record)
         self.assertIs(count, 1)
-        gbk_record = sequence_file_ops.load_genbank(self.gbk_filename)
+        gbk_record = seqfile_ops.load_genbank(self.gbk_filename)
         self.assertEqual(gbk_record.id, self.record.id)
         # check features
         for index in range (0,1):
@@ -147,17 +147,17 @@ class test_seq_features(TestCase):
     # do we need a load_multiple_genbank test?
 
     def test_load_agnostic_fas(self):
-        count = sequence_file_ops.write_fasta(self.fas_filename, self.record)
+        count = seqfile_ops.write_fasta(self.fas_filename, self.record)
         self.assertIs(count, 1)
-        fas_record, type = sequence_file_ops.load_agnostic(self.fas_filename)
+        fas_record, type = seqfile_ops.load_agnostic(self.fas_filename)
         self.assertEqual(fas_record.id, self.record.id)
         self.assertEqual(type, 'fasta')
 
     def test_load_agnostic_gbk(self):
-        count = sequence_file_ops.write_genbank(self.gbk_filename,
+        count = seqfile_ops.write_genbank(self.gbk_filename,
                                                 self.record)
         self.assertIs(count, 1)
-        gbk_record, type = sequence_file_ops.load_agnostic(self.gbk_filename)
+        gbk_record, type = seqfile_ops.load_agnostic(self.gbk_filename)
         self.assertEqual(gbk_record.id, self.record.id)
         self.assertEqual(type, 'genbank')
         # check features

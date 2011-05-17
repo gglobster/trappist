@@ -2,9 +2,9 @@ __author__ = 'GG'
 
 def seq_subset_load(infile, subset_mode, subset_args):
     """Load a subset of sequence segments from a sequence file."""
-    from analysis.other import coord_chop, get_seq_subset_by_coords
-    from analysis.seq_features import feat_collect, feature_coords
-    from analysis.sequence_file_ops import load_multifasta, surefmt_load, \
+    from analysis.sequence_ops import feat_collect, feature_coords, \
+        coord_chop, get_seq_subset_by_coords 
+    from analysis.seqfile_ops import load_multifasta, surefmt_load, \
         write_fasta
     from analysis.text_manipulation import adaptive_list_load
     if subset_mode is 'flatfile':
@@ -22,7 +22,9 @@ def seq_subset_load(infile, subset_mode, subset_args):
         # load or generate coordinate pairs for target segments
         if subset_mode is 'coordinates':
             try:
-                coords_file, header, columns =  subset_args
+                coords_file = subset_args['file']
+                header = subset_args['header']
+                columns = subset_args['columns']
                 coords_list = adaptive_list_load(coords_file, header, columns)
             except: raise
             else: print len(coords_list), "segments loaded from", infile
@@ -36,14 +38,16 @@ def seq_subset_load(infile, subset_mode, subset_args):
             else: print len(coords_list),"features loaded from", infile
         elif subset_mode is 'size':
             try:
-                size = subset_args
-                coords_list = coord_chop(len(seq_record.seq), size, subset_mode)
+                size = subset_args['size']
+                chop_mode = subset_args['chop_mode']
+                coords_list = coord_chop(len(seq_record.seq), size, chop_mode)
             except: raise
             else: print len(coords_list), "segments generated to fit", size
         else:
             print "ERROR: A mode MUST be specified."
-        # collect subset of sequence segments using coords_list
-        try: subset = get_seq_subset_by_coords(seq_record,coords_list)
+            coords_list = None
+        # collect subset of sequence segments using resulting coords_list
+        try: subset = get_seq_subset_by_coords(seq_record, coords_list)
         except: raise
         else: print "subset of", len(subset), "sequence segments"
         # save subset to multifasta file for later use or reference
@@ -53,11 +57,11 @@ def seq_subset_load(infile, subset_mode, subset_args):
         else: print "subset written to fasta file", subset_file
     return subset, subset_file
 
-def genome_sets_load(input_file, input_prefs, db_path):
+def genome_sets_load(genomes_path, input_file, input_prefs, db_path):
     """Load genome datasets listed in an input file."""
-    import sys
+    import os, sys
     from classes.analysis_obj import GenomeSet
-    from analysis.sequence_file_ops import ensure_fasta
+    from analysis.seqfile_ops import ensure_fasta
     from analysis.text_manipulation import adaptive_list_load
     from analysis.blasting import make_blastDB
     header = input_prefs['header']
@@ -67,11 +71,12 @@ def genome_sets_load(input_file, input_prefs, db_path):
     genome_sets = []
     for line in genomes_list:
         genome_name = line[0]
-        seq_file = line[1]
+        seq_file = os.path.join(genomes_path, line[1])
         try: db_infile = ensure_fasta(seq_file)
         except: raise
         else: print "genome FASTA sequence available in", db_infile
-        DB_report = make_blastDB(db_path, genome_name, seq_file, 'nucl')
+        dbfile_path, DB_report = make_blastDB(db_path, genome_name,
+                                              seq_file, 'nucl') 
         if DB_report['status'] is 1:
             print genome_name, ":", DB_report['message']['error']
             sys.exit()
