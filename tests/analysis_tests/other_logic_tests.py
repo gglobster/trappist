@@ -33,3 +33,5 @@ class test_os_logic(TestCase):
         existence = os.path.exists(abs_path)
         self.assertIs(report['status'], 0)
         self.assertIs(existence, True)
+
+# TODO: make test for create_id

@@ -60,7 +60,7 @@ def seq_subset_load(infile, subset_mode, subset_args):
 def genome_sets_load(genomes_path, input_file, input_prefs, db_path):
     """Load genome datasets listed in an input file."""
     import os, sys
-    from classes.analysis_obj import GenomeSet
+    from classes.data_objects import ContigSet
     from analysis.seqfile_ops import ensure_fasta
     from analysis.text_manipulation import adaptive_list_load
     from analysis.blasting import make_blastDB
@@ -82,7 +82,7 @@ def genome_sets_load(genomes_path, input_file, input_prefs, db_path):
             sys.exit()
         elif DB_report['status'] is 0:
             print genome_name, ":", DB_report['message']
-        new_genome_set = GenomeSet(db_infile, genome_name)
+        new_genome_set = ContigSet(db_infile, genome_name)
         genome_sets.append(new_genome_set)
     print "   ", len(genome_sets),"databases ready to search"
     return genome_sets

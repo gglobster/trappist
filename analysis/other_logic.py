@@ -31,3 +31,14 @@ def ensure_dir(dir_path):
         status = 0
     report = {'message': message, 'status': status}
     return abs_path, report
+
+def create_id(prefix):
+    """Create a unique identification number with a given prefix."""
+    # If several IDs with the same prefix are created in quick succession or
+    # in parallel, some may end up being the same. It would be better to use
+    # another method that adds a random element. But it's good to have the
+    # date of creation in the ID, for provenance tracking purposes.
+    from time import time
+    timestamp = str(time()).split('.')
+    unique_id = prefix+'_'+timestamp[0]
+    return unique_id

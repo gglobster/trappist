@@ -18,7 +18,7 @@ are initialized:
 ACTION : Adding genome datasets
 
 Each genome dataset is input using a function that takes a FASTA file with
-multiple records and a set of preferences and returns a GenomeSet object.
+multiple records and a set of preferences and returns a ContigSet object.
 
 >>> from trappist.analysis.dataset_manipulation import genome_sets_load
 >>> new_genome_sets = genome_sets_load(input_file, input_prefs, db_path)
@@ -29,12 +29,12 @@ multiple records and a set of preferences and returns a GenomeSet object.
 ACTION : Adding a query set
 
 The query is built from sequence objects that can be provided from a variety
-of sources. Once loaded, all query information is bundled into a FisherQuery
+of sources. Once loaded, all query information is bundled into a BlastQuery
 object.
 
 >>> from trappist.analysis.dataset_manipulation import seq_subset_load
 >>> query_segs, query_file = seq_subset_load(infile, subset_mode, subset_args)
->>> new_query = FisherQuery(query_id, query_segs, query_file)
+>>> new_query = BlastQuery(query_id, query_segs, query_file)
 >>> fisher_queries.append(new_query)
 
 The type of source needs to be specified to the loader function
@@ -70,19 +70,19 @@ a unique identifier is assigned.
 >>> my_run = BlastRun(run_id, query, parameters)
 
 The comparison of the query to a genome is done by passing the BlastRun
-object to a GenomeSet method that performs the blast operation and records
+object to a ContigSet method that performs the blast operation and records
 matches that satisfy similarity requirements specified in the parameters.
 
 >>> genome.run_blast(my_run)
 
-The run_blast() method calls blast_record_set() with the relevant GenomeSet
+The run_blast() method calls blast_record_set() with the relevant ContigSet
 and BlastRun attributes as arguments.
 
 >>> q_matches = blast_record_set(dbfile_path, fasta_records, blast_prefs)
 
 The matches for a given run are stored in dictionary form as lists indexed
 by query identifier. Complete match sets are paired with a reference to the
-run identifier and are stored in the GenomeSet.
+run identifier and are stored in the ContigSet.
 
 
 ACTION : Sorting matches

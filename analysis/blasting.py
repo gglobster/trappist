@@ -52,7 +52,7 @@ def blast_record_set(dbfile_path, fasta_records, blast_prefs):
     for query_record in fasta_records:
         query_file = 'temp.fas'
         out_file = 'temp.blast'
-        write_fasta(query_file,query_record)
+        write_fasta(query_file, query_record)
         try:
             status = local_blastn(query_file, out_file, dbfile_path,
                                   blast_prefs) 

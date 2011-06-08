@@ -7,7 +7,7 @@ import os
 from unittest import TestCase
 from Bio import AlignIO
 from Bio.Seq import Seq, SeqRecord
-from analysis import sequence_file_ops, alignment
+from analysis import seqfile_ops, alignment
 
 class test_alignments(TestCase):
 
@@ -43,11 +43,11 @@ class test_alignments(TestCase):
         self.mauve_sslist_2 = self.seq_file_m2+".sslist"
         self.mauve_sslist_3 = self.seq_file_m3+".sslist"
         # create temp files
-        sequence_file_ops.write_fasta(self.seq_file_2, self.two_records)
-        sequence_file_ops.write_fasta(self.seq_file_3, self.three_records)
-        sequence_file_ops.write_fasta(self.seq_file_m1, self.record_1)
-        sequence_file_ops.write_fasta(self.seq_file_m2, self.record_2)
-        sequence_file_ops.write_fasta(self.seq_file_m3, self.record_3)
+        seqfile_ops.write_fasta(self.seq_file_2, self.two_records)
+        seqfile_ops.write_fasta(self.seq_file_3, self.three_records)
+        seqfile_ops.write_fasta(self.seq_file_m1, self.record_1)
+        seqfile_ops.write_fasta(self.seq_file_m2, self.record_2)
+        seqfile_ops.write_fasta(self.seq_file_m3, self.record_3)
         # command line for Mauve
         self.cline = "progressiveMauve --output="+self.mauve_out \
                      +" "+self.seq_file_m1+" "+self.seq_file_m2 \

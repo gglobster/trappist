@@ -144,7 +144,7 @@ class test_seqfile_ops(TestCase):
             self.assertEqual(gbk_record.features[index].type,
                              self.record.features[index].type)
 
-    # do we need a load_multiple_genbank test?
+    # TODO: write test_load_multiple_genbank
 
     def test_load_agnostic_fas(self):
         count = seqfile_ops.write_fasta(self.fas_filename, self.record)
@@ -165,7 +165,6 @@ class test_seqfile_ops(TestCase):
             self.assertEqual(gbk_record.features[index].type,
                              self.record.features[index].type)
 
-#    def test_compile_multifasta_from_folders(self):
-#        pass
+    # TODO: write test_compile_multifasta_from_folders(self):
 
 
