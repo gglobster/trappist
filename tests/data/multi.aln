@@ -1,0 +1,10 @@
+CLUSTAL 2.1 multiple sequence alignment
+
+
+seq1            TCAGATGGATGATGTTGGCCAACAGACTCATAAGGCTCTCGGATAAAAAT-TTGACCAGA
+seq2            TCAGATG-ATGA--TTGGCCAACAGACTCA-AGGCGTCTCAGATGATGATGTTGGCCAAC
+                ******* ****  **************** * *  **** *** *  ** *** ***  
+
+seq1            ------TTAGATAGACCC--------GGCGTC
+seq2            AGACTCCTAGGTAGAGCCAGATAGAAGGCGTC
+                       *** **** **        ******
