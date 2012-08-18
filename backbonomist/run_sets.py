@@ -1,2 +1,2 @@
-from sets.wgs import pXO1_positives as genomes
-from sets.references import pXO1 as references
+from sets.wgs import pXO2_positives as genomes
+from sets.references import pXO2 as references

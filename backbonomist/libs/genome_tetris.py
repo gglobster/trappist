@@ -239,6 +239,7 @@ def build_scaffolds(run_ref, r_root_dir, run_dirs, prox_D, separator,
                         print msg,
                         subset.append(ctg_num)
                         run_ref.log(msg)
+                        
                 elif mode == "select":
                     try:
                         if int(ctg_num) in genome[mode]:
@@ -257,6 +258,7 @@ def build_scaffolds(run_ref, r_root_dir, run_dirs, prox_D, separator,
                         print msg,
                         subset.append(ctg_num)
                         run_ref.log(msg)
+                        
         # at this point we should have a subset of contigs selected
         for ctg_num in subset:
             logstring = "".join(["\t", ctg_num])

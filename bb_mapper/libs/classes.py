@@ -13,12 +13,14 @@ class Noodle(object):
         self.nudge = genome['nudge']+1
         self.invert = False
 
+		self.dir = seq_dir+genome['cat']+'/'
+
         if genome['input'] == 'fas':
-            self.fas = seq_dir+genome['file']
-            self.gbk = fas2gbk(seq_dir+genome['file'])
+            self.fas = self.dir+genome['file']
+            self.gbk = fas2gbk(self.dir+genome['file'])
         elif genome['input'] == 'gbk':
-            self.gbk = seq_dir+genome['file']
-            self.fas = gbk2fas(seq_dir+genome['file'])
+            self.gbk = self.dir+genome['file']
+            self.fas = gbk2fas(self.dir+genome['file'])
         else:
             print "ERROR in input format: FastA or Genbank required"
             sys.exit()
