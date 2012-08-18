@@ -12,8 +12,8 @@ class Noodle(object):
         self.offset = genome['offset']
         self.nudge = genome['nudge']+1
         self.invert = False
-
-		self.dir = seq_dir+genome['cat']+'/'
+        
+        self.dir = seq_dir+genome['cat']+'/'
 
         if genome['input'] == 'fas':
             self.fas = self.dir+genome['file']

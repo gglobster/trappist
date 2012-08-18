@@ -278,7 +278,10 @@ def orf_eus(canvas, featL, coords, color_hex, shape):
 def contig_ticker(canvas, feature, cLen, Y0, nudge, offset, side):
     """Draw contig separators."""
     # get contig name
-    name = feature.qualifiers.get('locus_tag')[0]
+    try:
+    	name = feature.qualifiers.get('locus_tag')[0]
+    except TypeError:
+    	name = 'unnamed feature'
     # take start and end points
     location = feature.location
     Zs = location.nofuzzy_start

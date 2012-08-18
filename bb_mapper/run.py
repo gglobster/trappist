@@ -6,17 +6,17 @@ from libs.scripts import align_pairwise, align_multi
 from run_config import *
 from run_sets import genomes
 
-i_msg = "\n", \
-        "##################################################\n", \
-        "### BB-Mapper v. 0.2  (prev. PlasmiG)          ###\n", \
-        "### Copyright 2012 Geraldine A. Van der Auwera ###\n", \
-        "##################################################\n"
+i_msg = " ", \
+        "##################################################", \
+        "### BB-Mapper v. 0.2  (prev. PlasmiG)          ###", \
+        "### Copyright 2012 Geraldine A. Van der Auwera ###", \
+        "##################################################"
 
 def usage():
     print "Usage: python gobble.py bb_map -args (don't call this directly!)"
 
 def info():
-    print i_msg
+    print "\n".join(i_msg)
 
 def get_arg(args, key):
     return args[args.index(key)+1]
