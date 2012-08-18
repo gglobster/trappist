@@ -1,0 +1,3 @@
+New incarnation of the Totally Rad Analysis Pipelines Python Super Tool...
+
+Restructured with merging of backbonomist, bb_mapper and utilities packages. Less ambitious, more practical than previously.
