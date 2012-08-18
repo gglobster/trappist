@@ -1,9 +1,8 @@
 import re, numpy as np
 from loaders import td_txt_file_load
-from config import mtype
 from array_tetris import extract_nonzero, clump_rows
 
-def mauver_load2_k0(file, threshold):
+def mauver_load2_k0(file, threshold, mtype):
     """Parse Mauve coordinates file to extract segment coordinates.
 
     This loads the coordinates data into a Numpy array. All rows that contain
@@ -24,7 +23,7 @@ def mauver_load2_k0(file, threshold):
     except TypeError:
         nz_array = np.append(stub_array, raw_array)
     # collapse rows
-    cl_array = clump_rows(nz_array, threshold)
+    cl_array = clump_rows(nz_array, threshold, mtype)
     return cl_array
 
 def parse_clustal_idstars(filename):

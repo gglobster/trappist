@@ -2,14 +2,15 @@ import sys
 
 if sys.argv[1] == "bb_fish":
 
-    from backbonomist import backbonomist
-    backbonomist.main(sys.argv[2:])
+	from backbonomist import run
+	run.main(sys.argv[2:])
 
-#elif sys.argv[1] == "bb_map":
-#
-#    from bb_mapper import run
-#    run.main(sys.argv[2:])
-#
+elif sys.argv[1] == "bb_map":
+
+	from bb_mapper import run
+	run.main(sys.argv[2:])
+	
+
 #
 #elif sys.argv[1] == "util":
 #

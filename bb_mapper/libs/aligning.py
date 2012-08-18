@@ -37,10 +37,10 @@ def align_mauve(file_list, output, mauve_exec):
     # TODO: should set up something to parse Mauve errors
     return report
 
-def mauve_pw_align(ref, query, dirs, run, max_size, chop_mode, mauve_exec):
+def mauve_pw_align(ref, query, r_root_dir, g_root_dir, dirs, run, max_size, chop_mode, mauve_exec, mtype):
     """Set up and perform a pairwise alignment with Mauve."""
-    aln_dir = dirs['root']+run+dirs['aln_segs']
-    mauve_dir = dirs['root']+run+dirs['mauve']
+    aln_dir = r_root_dir+run+dirs['aln_segs']
+    mauve_dir = r_root_dir+run+dirs['mauve']
     # set outputs
     mauve_outfile = mauve_dir+ref.name+"_"+query.name+".mauve"
     segfile = aln_dir+ref.name+"_"+query.name+"_segs.txt"
@@ -51,29 +51,30 @@ def mauve_pw_align(ref, query, dirs, run, max_size, chop_mode, mauve_exec):
         # prep segments file
         open(segfile, 'w').write('')
         # purge any pre-existing sslist files
-        sslist_files = from_dir(dirs['seqfiles'], re.compile(r'.*\.sslist.*'))
+        sslist_files = from_dir(g_root_dir, re.compile(r'.*\.sslist.*'))
         for sslist in sslist_files:
-            try: os.remove(dirs['seqfiles']+sslist)
+            try: os.remove(g_root_dir+sslist)
             except Exception: raise
         # do Mauve alignment
         file_list = [ref.gbk, query.gbk]
         align_mauve(file_list, mauve_outfile, mauve_exec)
         try:
             # parse Mauve output (without initial clumping)
-            coords = mauver_load2_k0(mauve_outfile+".backbone", 0)
+            coords = mauver_load2_k0(mauve_outfile+".backbone", 0, mtype)
             print "\nSegment results:", len(coords), '->',
             # chop segments that are too long
-            chop_array = chop_rows(coords, max_size, chop_mode)
+            chop_array = chop_rows(coords, max_size, chop_mode, mtype)
             print len(chop_array), 'segments <', max_size, 'bp'
             # make detailed pairwise alignments of the segments
             print "Aligning segments ..."
             ref_rec = load_genbank(ref.gbk)
             query_rec = load_genbank(query.gbk)
             id = iter_align(chop_array, ref_rec, query_rec,
-                            dirs['aln_segs'], segfile)
+                            aln_dir, segfile)
             print "Results:", id, "% id. overall"
         except IOError:
             print "\nERROR: Mauve alignment failed"
+            raise
 
 def iter_align(coord_array, ref_rec, query_rec, aln_dir, segs_file):
     """Iterate through array of coordinates to make pairwise alignments."""

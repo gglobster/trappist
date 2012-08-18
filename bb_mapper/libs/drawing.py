@@ -2,7 +2,6 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
 from reportlab.lib.colors import black, white, HexColor
 from loaders import load_genbank
-from config import fct_flags, fct_colors, idpt, min_size
 from array_tetris import offset_coord, nudge_coord, shade_split, \
     coord_flipper
 
@@ -75,7 +74,7 @@ def canvasser(hCan,vCan,transX,transY,outfile) :
     return canvasN
 
 def base_draw(canvas, genome, feats, key, dop_Y, Y0, X_shift, map_mode,
-             annot_cnt, seq_len, annot_mode, side) :
+             annot_cnt, seq_len, annot_mode, side, fct_flags, fct_colors) :
     """Draw contig baseline and features."""
     # unpack info
     cName = genome.name
@@ -448,7 +447,7 @@ def contig_draw(contig, in_file, out_file, annot_mode, key):
     canvas.save()
 
 def pairwise_draw(ref, query, segs, map_file, mode1, mode2, annot_mode,
-                  key1, key2):
+                  key1, key2, idpt, fct_flags, fct_colors, min_size):
     """Draw pairwise alignment map with similarity shading."""
     # load ref record
     ref_record = load_genbank(ref.gbk)
@@ -513,34 +512,34 @@ def pairwise_draw(ref, query, segs, map_file, mode1, mode2, annot_mode,
     # draw scale
     seq_scale(m_canvas, (ctg_len*u)-pNsize, 0, incrT, incrN, dip, dop )
     # draw shading legend
-    heatkey(m_canvas, -pNsize, -pNsize/2)
+    heatkey(m_canvas, -pNsize, -pNsize/2, idpt)
     # draw ref baseline and features
     base_draw(m_canvas, ref, ref_feat, key1, doLup, ref_Y, 0,
-              mode1, annot_cnt, seq_len, annot_mode, 'top')
+              mode1, annot_cnt, seq_len, annot_mode, 'top', fct_flags, fct_colors)
     # draw query baseline and features
     base_draw(m_canvas, query, q_feat, key2, -doLdn, query_Y, seq_len/2,
-              mode2, annot_cnt, seq_len, annot_mode, 'low')
+              mode2, annot_cnt, seq_len, annot_mode, 'low', fct_flags, fct_colors)
     # draw pairwise similarity shading
     try:
         for xa, xb, xc, xd, idp in segs:
             # evaluate color shading category
-            sh_color = HexColor(simcolor(idp))
+            sh_color = HexColor(simcolor(idp, idpt))
             # check for split
             if abs(xa) > abs(xb) or abs(xc) > abs(xd):
                 new_segpairs = shade_split(xa, xb, xc, xd, ref, query)
                 for xa1, xb1, xc1, xd1 in new_segpairs:
                     # draw shading
-                    shadowfax(m_canvas, xa1, xb1, xc1, xd1, ref_Y, query_Y, sh_color)
+                    shadowfax(m_canvas, xa1, xb1, xc1, xd1, ref_Y, query_Y, sh_color, min_size)
             else:
                 # draw shading
-                shadowfax(m_canvas, xa, xb, xc, xd, ref_Y, query_Y, sh_color)
+                shadowfax(m_canvas, xa, xb, xc, xd, ref_Y, query_Y, sh_color, min_size)
     except TypeError:
-        pass
+        raise
     # write to file and finalize the figure
     m_canvas.showPage()
     m_canvas.save()
 
-def multi_draw(g_pairs, segdata_list, mapfile):
+def multi_draw(g_pairs, segdata_list, mapfile, idpt, fct_flags, fct_colors, min_size):
     """Draw multiple alignment map with similarity shading."""
     print "Lookin\' good!"
     # compile info
@@ -566,7 +565,7 @@ def multi_draw(g_pairs, segdata_list, mapfile):
     # draw scale (max_len*u)-pNsize, hmar
     seq_scale(m_canvas, 2*hCan/3, -vmar*2, incrT, incrN, dip, dop)
     # draw shading legend
-    heatkey(m_canvas, hCan-hmar*5, init_Y+vmar)
+    heatkey(m_canvas, hCan-hmar*5, init_Y+vmar, idpt)
     # draw ref baseline and features
     counter = 0
     for genome in g_to_draw:
@@ -576,7 +575,7 @@ def multi_draw(g_pairs, segdata_list, mapfile):
                    if feature.type == 'CDS' or feature.type == 'cds']
         ref_Y = init_Y-dBL*counter
         base_draw(m_canvas, genome, g_cds, '', doLup, ref_Y, 0, 'n', 0,
-                  seq_len, 'n', 'n')
+                  seq_len, 'n', 'n', fct_flags, fct_colors)
         counter +=1
     counter = 0
     for ref, query in g_pairs:
@@ -586,18 +585,18 @@ def multi_draw(g_pairs, segdata_list, mapfile):
         try:                                  # TODO: adapt Y
             for xa, xb, xc, xd, idp in segdata_list[counter]:
                 # evaluate color shading category
-                sh_color = HexColor(simcolor(idp))
+                sh_color = HexColor(simcolor(idp, idpt))
                 # check for split
                 if abs(xa) > abs(xb) or abs(xc) > abs(xd):
                     new_segpairs = shade_split(xa, xb, xc, xd, ref, query)
                     for xa1, xb1, xc1, xd1 in new_segpairs:
                         # draw shading
                         shadowfax(m_canvas, xa1, xb1, xc1, xd1, ref_Y,
-                                  query_Y, sh_color)
+                                  query_Y, sh_color, min_size)
                 else:
                     # draw shading
                     shadowfax(m_canvas, xa, xb, xc, xd, ref_Y, query_Y,
-                              sh_color)
+                              sh_color, min_size)
             counter +=1
         except TypeError:
             pass
@@ -605,7 +604,7 @@ def multi_draw(g_pairs, segdata_list, mapfile):
     m_canvas.showPage()
     m_canvas.save()
 
-def shadowfax(canvas_def, xa, xb, xc, xd, aby0, cdy0, sh_color):
+def shadowfax(canvas_def, xa, xb, xc, xd, aby0, cdy0, sh_color, min_size):
     """Draw shaded area between homologous segments."""
     # cancel drawing if segments too small to draw
     if abs(xb)-abs(xa) < min_size:
@@ -645,13 +644,13 @@ def shadowfax(canvas_def, xa, xb, xc, xd, aby0, cdy0, sh_color):
         canvas_def.drawPath(puck, stroke=1, fill=0)
         puck.close()
 
-def simcolor(idp):
+def simcolor(idp, idpt):
     """Evaluate class of similarity."""
     id_cats = [x for x in idpt if idp>=x]
     sh_hex = idpt[max(id_cats)]
     return sh_hex
 
-def heatkey(canvas, hkX, hkY):
+def heatkey(canvas, hkX, hkY, idpt):
     """Draw color key for the heat map."""
     canvas.setLineWidth(1)
     canvas.setLineCap(0)

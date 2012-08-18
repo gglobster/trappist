@@ -43,15 +43,15 @@ def main(args=None):
     else:
         new_align = True
 
-    ensure_dir([dirs['seqfiles'], dirs['root']])
+    ensure_dir([g_root_dir, r_root_dir])
     for item in dirs.values():
-        ensure_dir([dirs['root']+run_id+item])
+        ensure_dir([r_root_dir+run_id+item])
 
     # one-pair or multiple?
     if len(genomes) < 2:
         raise Exception("ERROR: Need at least two genomes to align!")
     elif len(genomes) == 2:
-        align_pairwise(genomes, new_align, dirs, run_id, max_size, chop_mode, mauve_exec)
+        align_pairwise(genomes, new_align, r_root_dir, g_root_dir, dirs, run_id, max_size, chop_mode, mauve_exec, mtype, segtype, min_size)
     else:
-        align_multi(genomes, new_align, dirs, run_id, max_size, chop_mode, mauve_exec)
+        align_multi(genomes, new_align, r_root_dir, g_root_dir, dirs, run_id, max_size, chop_mode, mauve_exec, mtype, segtype, idpt, fct_flags, fct_colors, min_size)
 
