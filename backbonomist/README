@@ -1,0 +1,25 @@
+##############################################################################
+### Backbonomist v. 0.3                                                    ###
+### Copyright 2011 Geraldine A. Van der Auwera                             ###
+##############################################################################
+
+This project consists of a library of packages and a main script that can be
+run as a pipeline. The pipeline script is designed to take a reference genome
+segment, search unfinished query genomes to identify matching contigs and
+scaffold them against the reference.
+
+The primary application it was designed for is to identify plasmid contigs in
+unfinished microbial genomes and producing tentative assemblies.
+
+This replaces an older project that did the job but was unnecessarily complex
+in its design.
+
+STATUS: The code is operational up to scaffold production and annotation. It
+does require setting up some files and config parameters manually. This
+procedure is not yet described in the documentation.
+
+As of 17 Mar 2012 development is in testing/application phase.
+
+A feature that is desired but not currently on the list of next steps is:
+
+- GUI for loading in the initial dataset and configuring parameters

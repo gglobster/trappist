@@ -1,0 +1,10 @@
+##############################################################################
+### NGS Utilities v. 0.1                                                   ###
+### Copyright 2012 Geraldine A. Van der Auwera                             ###
+##############################################################################
+
+This project consists of a library of functions and scripts that can be
+used for common (and some less common) sequence manipulation and analysis
+tasks.
+
+I am developing them as need arises.

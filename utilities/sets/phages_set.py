@@ -1,0 +1,16 @@
+all = [
+    {'name': 'AP50', 'file': 'AP50.gbk', 'input': 'gbk', 'order': 1,
+     'nudge': 0, 'offset': 0},
+    {'name': 'GIL16c', 'file': 'GIL16c.gbk', 'input': 'gbk', 'order': 2,
+     'nudge': 0, 'offset': 0},
+    {'name': 'pBClin15', 'file': 'pBClin15.gbk', 'input': 'gbk', 'order': 3,
+     'nudge': 0, 'offset': 0},
+    {'name': 'pGIL01', 'file': 'pGIL01.gbk', 'input': 'gbk', 'order': 4,
+     'nudge': 0, 'offset': 0},
+    {'name': 'ATCC35646_106', 'file': 'ATCC35646_106.gbk', 'input': 'gbk',
+     'order': 5, 'nudge': 0, 'offset': 0},
+    {'name': 'IBL4222_363', 'file': 'IBL4222_363.gbk', 'input': 'gbk',
+     'order': 6, 'nudge': 0, 'offset': 0},
+    {'name': 'vd166_11', 'file': 'vd166_11.gbk', 'input': 'gbk', 'order': 7,
+     'nudge': 0, 'offset': 0},
+]
