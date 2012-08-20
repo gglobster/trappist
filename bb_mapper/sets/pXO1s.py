@@ -1,4 +1,4 @@
-all_pXO1s = [
+pXO1s = [
     {'name': 'pXO1', 'input': 'gbk', 'file': 'NC_007322.gbk', 'acc': 'NC_007322', 'size': 182, 'order': 1, 'nudge': 0, 'offset': 0, 'exclude': (0, 0), 'cat': 'original', 'defline': 'Bacillus anthracis str. Ames Ancestor plasmid pXO1'},
     {'name': 'pCI-XO1', 'input': 'gbk', 'file': 'NC_014331.gbk', 'acc': 'NC_014331', 'size': 182, 'order': 2, 'nudge': 0, 'offset': 0, 'exclude': (0, 0), 'cat': 'original', 'defline': 'Bacillus cereus biovar anthracis str. CI plasmid pCI-XO1'},
     {'name': 'pBCXO1', 'input': 'gbk', 'file': 'NC_010934.gbk', 'acc': 'NC_010934', 'size': 191, 'order': 3, 'nudge': 0, 'offset': 45000, 'exclude': (0, 0), 'cat': 'original', 'defline': 'Bacillus cereus plasmid pBCXO1'},
@@ -66,7 +66,7 @@ pXO1sC = [
 #    {'name': 'pAH1273_X1', 'input': 'gbk', 'file': 'pAH1273_X1.gbk', 'acc': 'pAH1273_X1', 'size': 281, 'order': 8, 'nudge': 0, 'offset': 0, 'exclude': (0, 0), 'cat': 'constructs', 'defline': 'Bacillus cereus AH1273 plasmid construct pAH1273_X1'},
 ]
 
-pXO1s = [    
+pXO1sD = [    
 	{'name': 'pXO1', 'input': 'gbk', 'file': 'NC_007322.gbk', 'acc': 'NC_007322', 'size': 182, 'order': 1, 'nudge': 0, 'offset': 0, 'exclude': (0, 0), 'cat': 'original', 'defline': 'Bacillus anthracis str. Ames Ancestor plasmid pXO1'},
 	{'name': 'pBDRD-ST26_X1', 'input': 'gbk', 'file': 'pBDRD-ST26_X1.gbk', 'acc': 'pBDRD-ST26_X1', 'size': 281, 'order': 2, 'nudge': 0, 'offset': 31000, 'exclude': (0, 0), 'cat': 'constructs', 'defline': 'Bacillus cereus BDRD-ST26 plasmid construct pBDRD-ST26_X1'},
     {'name': 'pF65185_X1', 'input': 'gbk', 'file': 'pF65185_X1.gbk', 'acc': 'pF65185_X1', 'size': 281, 'order': 3, 'nudge': 0, 'offset': 10500, 'exclude': (0, 0), 'cat': 'constructs', 'defline': 'Bacillus cereus F65185 plasmid construct pF65185_X1'},
