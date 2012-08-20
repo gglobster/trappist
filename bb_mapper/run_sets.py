@@ -1,2 +1,2 @@
 
-from sets.pXO2s import pXO2s as genomes
+from sets.pXO1s import pXO1s as genomes
