@@ -1,20 +1,14 @@
-## script to convert sets of fasta files to genbank format
+## script to reverse orientation of a sequence, including all feature annotations
 
 import re
 from sys import argv
-from libs.common import from_dir, ensure_dir, load_fasta, write_genbank
-from Bio.Alphabet import generic_dna
+from backbonomist.libs.loaders import load_genbank
+from backbonomist.libs.writers import write_genbank
 
-origin_dir = "data/"+argv[1]
-destin_dir = "data/"+argv[2]+"/"
+infile = "data/"+argv[1]
+outfile = "data/"+argv[2]
 
-ensure_dir([destin_dir])
-
-filenames = from_dir(origin_dir, re.compile(r'.*\.fas.*'))
-
-for filename in filenames:
-    rec_name = filename[:filename.find('.fas')]
-    record = load_fasta(origin_dir+"/"+filename)
+record = load_fasta(origin_dir+"/"+filename)
 
     # make a genbank file of the contig
     gbk_file = "".join([destin_dir, rec_name, ".gbk"])
