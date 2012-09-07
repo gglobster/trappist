@@ -43,7 +43,7 @@ def save_datasumm(run_id, blast_mode, r_root_dir, run_dirs, genomes,
     g_header = "\t".join(["## Name", "Offset", "Format", "File"])
     g_data = [g_title, g_header]
     for genome in genomes:
-        g_data.append("\t".join([genome['name'], str(genome['offset'][1]),
+        g_data.append("\t".join([genome['name'], str(genome['offset']),
                                  genome['input'], genome['file']]))
     g_block = "\n".join(g_data)
     # references data

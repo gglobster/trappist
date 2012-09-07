@@ -10,7 +10,7 @@ r_root_dir = base_root+'/backbonomist/'
 # run-independent directories
 fixed_dirs = {
 'ref_dbs_dir': base_root+'/ref_dbs/',
-'ori_g_dir': g_root_dir+'original/',
+'ori_g_dir': g_root_dir+'plasmids/',
 'gbk_contigs_dir': g_root_dir+'genbank_ctgs/',
 'fas_contigs_dir': g_root_dir+'fasta_ctgs/',
 'mfas_contigs_dir': g_root_dir+'mfasta_ctgs/',

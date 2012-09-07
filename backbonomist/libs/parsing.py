@@ -45,7 +45,10 @@ def glompX_blast_out(genomes, run_ref, blast_mode, r_root_dir, run_dirs,
             ensure_dir([matches_dir])
             blast_infile = blast_dir+g_name+"_out.txt"
             genome_ctg_dir = fixed_dirs['fas_contigs_dir']+g_name+"/"
-            rec_array = read_array(blast_infile, blast_dtypes)
+            try:
+            	rec_array = read_array(blast_infile, blast_dtypes)
+            except Exception:
+            	rec_array = []
             if len(rec_array) > 0:  # take qualified hits
                 p_cnt = 0
                 n_cnt = 0
