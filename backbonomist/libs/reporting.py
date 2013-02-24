@@ -207,7 +207,7 @@ def matches_table(match_dict, r_root_dir, run_dirs, timestamp):
         print g_score
         run_ref.log(str(g_score))
     # graph detailed scores for all genomes
-    hits_heatmap_multi(ref_n, segs, g_names, mf_ctgs, mf_g_list, mf_hits_fig)
+####hits_heatmap_multi(ref_n, segs, g_names, mf_ctgs, mf_g_list, mf_hits_fig)
     # graph summarized scores for all genomes
     red_g_array = np.array(red_g_list)
     g_names.reverse()

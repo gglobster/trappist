@@ -7,7 +7,7 @@ from Bio import Entrez
 from libs.common import ensure_dir, load_genbank, write_fasta
 
 # Tell NCBI who we are
-Entrez.email	= "Geraldine_VdAuwera@harvard.hms.edu"
+Entrez.email	= "vdauwera@broadinstitute.org"
 
 ## Customizable bits ##
 data_dir = "data/"+argv[1]+"/"    # directory to save files to

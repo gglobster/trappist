@@ -9,7 +9,7 @@ origin_dir = "data/"+argv[1]
 destin_dir = "data/"+argv[2]+"/"
 prefix = argv[3]
 postfix = argv[4]
-sub_base = argv[5]
+#sub_base = argv[5]
 
 ensure_dir([destin_dir])
 
@@ -24,8 +24,9 @@ for filename in filenames:
     # substitute new name
     if capture:
         counter +=1
-        new_filename = sub_base+"_"+str(counter)+".fas"
+        #new_filename = sub_base+"_"+str(counter)+".fas"
+        new_filename = capture.group(1)+".fas"
         # copy file
         copyfile(origin_dir+"/"+filename, destin_dir+new_filename)
-        print capture.group(1), sub_base+"_"+str(counter)
+        print capture.group(1), str(counter)
 
