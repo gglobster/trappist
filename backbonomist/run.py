@@ -1,4 +1,5 @@
 import os, sys, time
+from pprint import pprint
 
 import cPickle as pickle
 from datetime import datetime
@@ -12,6 +13,7 @@ from libs.mapping import prep_maps
 from libs.aligning import align_cstrct2ref, align_ctg2ref
 from libs.reporting import save_datasumm, log_start_run, log_end_run, \
     init_reports, log_resume_run, matches_table
+from libs.filtering import filter_contigs
 
 from run_config import *
 from run_sets import references, genomes
@@ -63,7 +65,16 @@ def main(args=None):
         limit = 6
     else:
         limit = 100 # unnecessarily high cap
-
+        
+    if "-filter" in args:
+        threshold = int(get_arg(args, "-filter"))
+        resume = True
+        step = 6
+        limit = 7
+    else:
+        threshold = 5 # reduce for small references
+        limit = 100 # unnecessarily high cap
+        
     if "-ctg" in args:
         ctg_subset = get_arg(args, "-ctg")
     else:
@@ -88,14 +99,23 @@ def main(args=None):
     genome_pickles = pickle_root+"_genomes.p"
     blast_pickles = pickle_root+"_blast.p"
     match_pickles = pickle_root+"_matches.p"
+    norm_pickles = pickle_root+"_norm.p"
 
     # check for pickles
     run_refs = []
     run_gs = []
     run_blast = False
     run_matches = []
+    run_norm_matches = {}
 
     if resume:
+        # normalized matches
+        if step > 5:
+            try: run_norm_matches = pickle.load(open(norm_pickles, 'rb'))
+            except IOError:
+                print "WARNING: Could not load norm pickle"
+                run_norm_matches = {}
+                step = 5
         # matches
         if step > 4:
             try: run_matches = pickle.load(open(match_pickles, 'rb'))
@@ -211,14 +231,24 @@ def main(args=None):
 
         elif step is 5:
             print "\n###", step, ". Make match results table & graphs ###\n"
-            for match_dict in run_matches:
+            for ref_matches in run_matches:
                 timestamp = str(datetime.now())
-                matches_table(match_dict, r_root_dir, run_dirs, timestamp)
+                ref_norm_matches = matches_table(ref_matches, r_root_dir, run_dirs, timestamp)
+                run_norm_matches[ref_matches['ref'].name] = ref_norm_matches
+            if os.path.exists(norm_pickles):
+                os.remove(norm_pickles)
+            pickle.dump(run_norm_matches, open(norm_pickles, 'wb'))
             step +=1
 
-        ### model evaluation and filtering goes here
-
         elif step is 6:
+            print "\n###", step, ". Filter matching contigs ###\n"
+            for ref in run_refs:
+                timestamp = str(datetime.now())
+                filter_contigs(ref, run_id, genomes, run_norm_matches[ref.name], chop_size, threshold, r_root_dir, 
+                            run_dirs, fixed_dirs, timestamp)
+            step +=1
+
+        elif step is 7:
             print "\n###", step, ". Annotate matching contigs ###\n"
             for ref in run_refs:
                 timestamp = str(datetime.now())
@@ -227,7 +257,7 @@ def main(args=None):
                                  timestamp, blast_prefs)
             step +=1
 
-        elif step is 7:
+        elif step is 8:
             print "\n###", step, ". Align contigs pairwise to reference ###\n"
             for ref in run_refs:
                 timestamp = str(datetime.now())
@@ -235,7 +265,7 @@ def main(args=None):
                               genomes, mauve_exec, max_size, chop_mode, mtype)
             step +=1
 
-        elif step is 8:
+        elif step is 9:
             print "\n###", step, ". Construct backbone-based scaffolds ###\n"
             for ref in run_refs:
                 timestamp = str(datetime.now())
@@ -244,7 +274,7 @@ def main(args=None):
                                 mtype, ctg_subset)
             step +=1
 
-        elif step is 9:
+        elif step is 10:
             print "\n###", step, ". Align constructs pairwise to reference ###\n"
             for ref in run_refs:
                 timestamp = str(datetime.now())
@@ -252,7 +282,7 @@ def main(args=None):
                      genomes, max_size, chop_mode, mtype, mauve_exec)
             step +=1
 
-        elif step is 10:
+        elif step is 11:
             print "\n###", step, ". Generate maps ###\n"
             for ref in run_refs:
                 timestamp = str(datetime.now())
@@ -261,7 +291,7 @@ def main(args=None):
                           fct_flags, fct_colors, idpt)
             step +=1
 
-        elif step > 10:
+        elif step > 12:
             break
 
     stop_timestamp = str(datetime.now())

@@ -1,6 +1,25 @@
 test = [
 		{'name': 'NC_007322', 'input': 'gbk', 'file': 'NC_007322.gbk', 'acc': 'NC_007322', 'size': 0, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'NC_007322'},		
-		{'name': 'NC_007323', 'input': 'gbk', 'file': 'NC_007323.gbk', 'acc': 'NC_007323', 'size': 0, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'NC_007323'},
+		{'name': 'NC_010934', 'input': 'gbk', 'file': 'NC_010934.gbk', 'acc': 'NC_010934', 'size': 0, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'NC_010934'},
+#		{'name': 'NC_007323', 'input': 'gbk', 'file': 'NC_007323.gbk', 'acc': 'NC_007323', 'size': 0, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'NC_007323'},
+#        {'name': 'BMB171', 'input': 'gbk', 'file': 'CP001903.gbk', 'acc': 'CP001903', 'size': 5330, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus thuringiensis BMB171 chromosome', 'ctrl': 'neg'},
+#        {'name': 'CT-43', 'input': 'gbk', 'file': 'CP001907.gbk', 'acc': 'CP001907', 'size': 5487, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus thuringiensis sv chinensis CT-43 chromosome'},
+#        {'name': 'YBT-020', 'input': 'gbk', 'file': 'CP002508.gbk', 'acc': 'CP002508', 'size': 5355, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus thuringiensis sv finitimus YBT-020 chromosome'},
+#        {'name': 'ATCC10987', 'input': 'gbk', 'file': 'NC_003909.gbk', 'acc': 'NC_003909', 'size': 5224, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus ATCC 10987 chromosome'},
+        {'name': 'ATCC14579', 'input': 'gbk', 'file': 'NC_004722.gbk', 'acc': 'NC_004722', 'size': 5412, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus ATCC 14579 chromosome', 'ctrl': 'neg'},
+        {'name': '97-27', 'input': 'gbk', 'file': 'NC_005957.gbk', 'acc': 'NC_005957', 'size': 5238, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus thuringiensis sv konkukian str. 97-27 chromosome', 'ctrl': 'neg'},
+#        {'name': 'E33L', 'input': 'gbk', 'file': 'NC_006274.gbk', 'acc': 'NC_006274', 'size': 5301, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus E33L chromosome'},
+#        {'name': 'AmesAnc', 'input': 'gbk', 'file': 'NC_007530.gbk', 'acc': 'NC_007530', 'size': 5227, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus anthracis str. Ames Ancestor chromosome'},
+#        {'name': 'AlHakam', 'input': 'gbk', 'file': 'NC_008600.gbk', 'acc': 'NC_008600', 'size': 5257, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus thuringiensis str. Al Hakam chromosome'},
+#        {'name': 'NVH391-98', 'input': 'gbk', 'file': 'NC_009674.gbk', 'acc': 'NC_009674', 'size': 4087, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cytotoxicus NVH 391-98 chromosome'},
+#        {'name': 'KBAB4', 'input': 'gbk', 'file': 'NC_010184.gbk', 'acc': 'NC_010184', 'size': 5263, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus weihenstephanensis KBAB4 chromosome'},
+#        {'name': 'AH187', 'input': 'gbk', 'file': 'NC_011658.gbk', 'acc': 'NC_011658', 'size': 5269, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus AH187 chromosome'},
+#        {'name': 'B4264', 'input': 'gbk', 'file': 'NC_011725.gbk', 'acc': 'NC_011725', 'size': 5419, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus B4264 chromosome'},
+#        {'name': 'G9842', 'input': 'gbk', 'file': 'NC_011772.gbk', 'acc': 'NC_011772', 'size': 5387, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus G9842 chromosome'},
+#        {'name': 'AH820', 'input': 'gbk', 'file': 'NC_011773.gbk', 'acc': 'NC_011773', 'size': 5303, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus AH820 chromosome'},
+#        {'name': 'Q1', 'input': 'gbk', 'file': 'NC_011969.gbk', 'acc': 'NC_011969', 'size': 5214, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus Q1 chromosome'},
+#        {'name': '03BB102', 'input': 'gbk', 'file': 'NC_012472.gbk', 'acc': 'NC_012472', 'size': 5270, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus 03BB102 chromosome'},
+#        {'name': 'CI', 'input': 'gbk', 'file': 'NC_014335.gbk', 'acc': 'NC_014335', 'size': 5196, 'offset': (0,0), 'ignore': (0, 0), 'defline': 'Bacillus cereus biovar anthracis str. CI chromosome'}
 ];
 
 all = [

@@ -59,82 +59,83 @@ def glompX_blast_out(genomes, run_ref, blast_mode, r_root_dir, run_dirs,
                         # positive control TODO: better solution
                         control_scores.append(rec_array[0][11])
                         ref_flag = False
-                for line in rec_array:
-                    idp = line[2]
-                    q_start, q_stop = line[8], line[9]
-                    score = line[11]
-                    length = abs(q_stop-q_start)
-                    # check the blast mode to use the right thresholds
-                    if blast_mode == 'n' or blast_mode == 'tx':
-                        min_match = min_nt_match
-                        min_score = min_nt_score
-                        min_idp = min_nt_idp
-                    elif blast_mode == 'tn':
-                        min_match = min_aa_match
-                        min_score = min_aa_score
-                        min_idp = min_aa_idp
-                    else: # default to nucleotide mode
-                        min_match = min_nt_match
-                        min_score = min_nt_score
-                        min_idp = min_nt_idp
-                    if length>min_match and score>min_score and idp>min_idp:
-                        print "+",
-                        p_cnt +=1
-                        contig_id = line[1]
-                        if contig_id not in ref_hits[g_name].keys():
-                            ref_hits[g_name][contig_id] = {seg_n: score}
-                        else:
-                            ref_hits[g_name][contig_id][seg_n] = score
-                        pattern = re.compile(r'('+contig_id+')\.fas')
-                        for item in listdir(genome_ctg_dir):
-                            match = re.match(pattern, item)
-                            if match:
-                                fas_file = matches_dir+match.group(1)+".fas"
-                                if not path.exists(fas_file):
-                                    copyfile(genome_ctg_dir+item, fas_file)
-                        # context capture
-                        capture_flag = False
-                        while True:
-                            try:
-                                if int(seg_n) in run_ref.capture:
-                                    capture_flag = True
-                                else:
-                                    break
-                            except ValueError:
-                                if seg_n in run_ref.capture:
-                                    capture_flag = True
-                                else:
-                                    break
+                # only take the first best hit (could be improved)
+                line = rec_array[0]
+                idp = line[2]
+                q_start, q_stop = line[8], line[9]
+                score = line[11]
+                length = abs(q_stop-q_start)
+                # check the blast mode to use the right thresholds
+                if blast_mode == 'n' or blast_mode == 'tx':
+                    min_match = min_nt_match
+                    min_score = min_nt_score
+                    min_idp = min_nt_idp
+                elif blast_mode == 'tn':
+                    min_match = min_aa_match
+                    min_score = min_aa_score
+                    min_idp = min_aa_idp
+                else: # default to nucleotide mode
+                    min_match = min_nt_match
+                    min_score = min_nt_score
+                    min_idp = min_nt_idp
+                if length>min_match and score>min_score and idp>min_idp:
+                    print "+",
+                    p_cnt +=1
+                    contig_id = line[1]
+                    if contig_id not in ref_hits[g_name].keys():
+                        ref_hits[g_name][contig_id] = {seg_n: score}
+                    else:
+                        ref_hits[g_name][contig_id][seg_n] = score
+                    pattern = re.compile(r'('+contig_id+')\.fas')
+                    for item in listdir(genome_ctg_dir):
+                        match = re.match(pattern, item)
+                        if match:
+                            fas_file = matches_dir+match.group(1)+".fas"
+                            if not path.exists(fas_file):
+                                copyfile(genome_ctg_dir+item, fas_file)
+                    # context capture
+                    capture_flag = False
+                    while True:
+                        try:
+                            if int(seg_n) in run_ref.capture:
+                                capture_flag = True
                             else:
                                 break
-                        if capture_flag:
-                            # load the sequence
-                            contig_file = matches_dir+contig_id+".fas"
-                            contig_rec = load_fasta(contig_file)
-                            # check orientation
-                            if q_start < q_stop:
-                                c_start = q_start-capture_span
-                                c_stop = q_stop+capture_span
+                        except ValueError:
+                            if seg_n in run_ref.capture:
+                                capture_flag = True
                             else:
-                                c_start = q_stop-capture_span
-                                c_stop = q_start+capture_span
-                            print c_start, c_stop
-                            # check limits
-                            if c_start < 0:
-                                c_start = 1
-                            if c_stop > len(contig_rec.seq):
-                                c_stop = len(contig_rec.seq)
-                            # proceed
-                            cxt_file = capture_dir+g_name+"_"+contig_id+".fas"
-                            cxt_rec = SeqRecord(id=contig_id+"_"
-                                                    +str(c_start)+"_"
-                                                    +str(c_stop),
-                                                seq=contig_rec.seq
-                                                    [c_start:c_stop])
-                            write_fasta(cxt_file, cxt_rec)
-                    else:
-                        print "-",
-                        n_cnt +=1
+                                break
+                        else:
+                            break
+                    if capture_flag:
+                        # load the sequence
+                        contig_file = matches_dir+contig_id+".fas"
+                        contig_rec = load_fasta(contig_file)
+                        # check orientation
+                        if q_start < q_stop:
+                            c_start = q_start-capture_span
+                            c_stop = q_stop+capture_span
+                        else:
+                            c_start = q_stop-capture_span
+                            c_stop = q_start+capture_span
+                        print c_start, c_stop
+                        # check limits
+                        if c_start < 0:
+                            c_start = 1
+                        if c_stop > len(contig_rec.seq):
+                            c_stop = len(contig_rec.seq)
+                        # proceed
+                        cxt_file = capture_dir+g_name+"_"+contig_id+".fas"
+                        cxt_rec = SeqRecord(id=contig_id+"_"
+                                                +str(c_start)+"_"
+                                                +str(c_stop),
+                                            seq=contig_rec.seq
+                                                [c_start:c_stop])
+                        write_fasta(cxt_file, cxt_rec)
+                else:
+                    print "-",
+                    n_cnt +=1
                 if n_cnt > 0:
                     logstring = "".join(["\t", str(p_cnt), " (",
                                          str(n_cnt), ")"])

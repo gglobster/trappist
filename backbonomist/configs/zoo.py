@@ -3,6 +3,9 @@ project_id = 'zoo'
 project_date = '2013'
 prot_db_name = 'Bacteria_prot'
 
+# segment chop_size TODO: override ref spec
+chop_size = 2000
+
 # segment context capture
 capture_span = 1000
 

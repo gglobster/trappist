@@ -145,6 +145,7 @@ def matches_table(match_dict, r_root_dir, run_dirs, timestamp):
     mf_g_list = []
     mf_ctgs = []
     g_names = []
+    norm_matches = {}
     # traverse dict of results
     for g_name in sorted(ref_hits, reverse=True):
         print "\t", g_name,
@@ -202,6 +203,7 @@ def matches_table(match_dict, r_root_dir, run_dirs, timestamp):
         mf_g_list.append(g_norm)
         mf_ctgs.append(contigs)
         g_names.append(g_name)
+        norm_matches[g_name] = {'ctg_scores': g_norm, 'ctg_names': contigs}
         # estimate total score per genome
         g_score = np.sum(g_reduce)
         print g_score
@@ -215,4 +217,5 @@ def matches_table(match_dict, r_root_dir, run_dirs, timestamp):
                        red_hits_fig)
     # done
     rep_fhandle.close()
+    return norm_matches
 
